@@ -1,0 +1,34 @@
+- @page_title = "Question ##{@question.position}"
+
+- if owner?
+  #mid_nav.top= link_to 'Edit Question', edit_quiz_question_path(@quiz, @question), :class => 'edit'
+
+= quiz_link
+
+%h2= @page_title
+
+#show_question= @question.body.to_html
+
+.heading
+  %h3 Answers
+  = link_to 'Add Answer', '#', :class => 'add' if owner?
+
+- if owner?
+  .new_ajax_form
+    %h4 Add Answer
+    - form_for @answer, :url => quiz_question_answers_path(@quiz, @question) do |f|
+      = f.text_area :body
+      %br
+      = f.check_box :correct
+      = f.label :correct, 'Is this the correct answer?'
+      .submit
+        = submit_tag 'Add Answer'
+        %span or
+        = link_to 'Cancel', '#', :class => 'cancel'
+  
+- if @answers.any?
+  %ul#answers_list
+    - @answers.each do |answer|
+      %li= answer.body
+- else
+  = no_items('No answers have been added yet.')

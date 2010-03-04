@@ -1,0 +1,21 @@
+- @page_title = 'Quizzes'
+
+%h2= @page_title
+
+= link_to 'Create Quiz', new_quiz_path
+
+#quizzes_box
+  .box
+    %h3 Recently Added
+    %ul
+      - @recently_added.each do |quiz|
+        %li= link_to quiz.title, quiz_path(quiz)
+  
+
+%h3 Categories
+
+%ul
+  - @categories.each do |category|
+    %li
+      = link_to category.name, category_path(category)
+      = '(' + category.quizzes_count.to_s + ')'

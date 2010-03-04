@@ -1,0 +1,12 @@
+- @page_title = 'Dashboard'
+
+%h2= @page_title
+
+
+- content_for :right do
+  %h3 Your Quizzes
+  
+  - if @your_quizzes.any?
+    %ul
+      - @your_quizzes.each do |quiz|
+        %li= link_to quiz.title, quiz_path(quiz)

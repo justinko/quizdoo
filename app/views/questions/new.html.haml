@@ -1,0 +1,15 @@
+- @page_title = 'New Question'
+
+= quiz_link
+
+%h2= @page_title
+
+.form
+  - form_for @question, :url => quiz_questions_path(@quiz) do |f|
+    = f.error_messages
+    = f.text_area :body
+    %p= markdown
+    .submit
+      = submit_tag 'Create Question', :disable_with => 'Creating Question...'
+      %span or
+      = link_to 'Cancel', quiz_path(@quiz), :class => 'cancel'

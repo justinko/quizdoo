@@ -1,0 +1,154 @@
+body {
+  margin: 0;
+  padding: 0;
+  font: 12px/18px arial, tahoma, verdana, sans-serif;
+  color: #222; }
+
+textarea {
+  font-family: arial, tahoma, verdana, sans-serif;
+  font-size: 12px;
+  padding: 4px;
+  height: 80px; }
+
+a {
+  color: #4085cc;
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+  a.edit,
+  a.delete,
+  a.cancel {
+    color: #c00; }
+
+a#logo img {
+  border: 0; }
+
+#header {
+  width: 960px;
+  padding: 10px 0;
+  margin: 0 auto; }
+  #header #nav {
+    float: right;
+    margin-top: 25px; }
+    #header #nav ul li {
+      float: left;
+      padding: 0;
+      margin: 0 0 0 20px;
+      list-style-type: none; }
+      #header #nav ul li a {
+        display: block;
+        font-size: 16px; }
+
+hr#split {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-bottom: 1px dotted #ccc; }
+
+.flash {
+  padding: 10px 12px;
+  color: #fff;
+  margin-bottom: 20px;
+  background: #f5f5f5;
+  font-weight: bold; }
+  .flash#success {
+    color: #60BB22; }
+  .flash#failure {
+    color: #B80028; }
+
+#content {
+  width: 960px;
+  margin: 20px auto; }
+  #content #left {
+    float: left;
+    width: 620px; }
+    #content #left h2 {
+      font-size: 22px;
+      margin-top: 0; }
+    #content #left #mid_nav {
+      float: right;
+      font-size: 14px; }
+      #content #left #mid_nav.top {
+        margin-top: 20px; }
+  #content #right {
+    float: right;
+    width: 340px; }
+
+.submit span {
+  color: #888; }
+
+.heading {
+  background: #e5f2ff;
+  float: left;
+  width: 100%;
+  font-size: 12px; }
+  .heading h3 {
+    margin: 5px 0 5px 8px;
+    float: left; }
+  .heading a.add {
+    float: right;
+    padding: 5px 8px;
+    background: #5bc236;
+    color: #fff; }
+
+.form {
+  background: #f5f5f5;
+  float: left;
+  width: 100%; }
+  .form form {
+    margin: 15px; }
+    .form form textarea {
+      width: 90%; }
+
+.new_ajax_form {
+  background: #f5f5f5;
+  float: left;
+  width: 100%;
+  margin-bottom: 20px;
+  display: none; }
+  .new_ajax_form h4 {
+    color: #2eae00;
+    margin: 8px 10px 5px; }
+  .new_ajax_form form {
+    margin: 0 10px 10px; }
+    .new_ajax_form form textarea {
+      margin-bottom: 8px;
+      width: 90%; }
+  .new_ajax_form .submit {
+    margin-top: 8px; }
+
+ul#questions_list {
+  float: left;
+  padding-left: 20px; }
+  ul#questions_list li {
+    list-style-type: none;
+    font-size: 14px; }
+
+ul#answers_list {
+  clear: both;
+  padding: 0; }
+  ul#answers_list li {
+    list-style-type: none;
+    background: #f5f5f5;
+    border-left-width: 5px;
+    border-left-style: solid;
+    border-left-color: #5bc236;
+    padding: 4px 8px;
+    margin-bottom: 10px; }
+
+.quiz_link {
+  color: #888;
+  margin-bottom: 5px; }
+
+.no_items {
+  background: #f5f5f5;
+  float: left;
+  width: 100%;
+  padding: 30px 0;
+  font-size: 14px;
+  color: #888;
+  text-align: center; }
+
+#show_question {
+  margin-bottom: 20px;
+  float: left; }

@@ -1,0 +1,15 @@
+# == Schema Information
+#
+# Table name: questions
+#
+#  id            :integer         not null, primary key
+#  quiz_id       :integer
+#  body          :text
+#  answers_count :integer         default(0)
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
+one:
+  quiz: rails
+  body: This is the body.

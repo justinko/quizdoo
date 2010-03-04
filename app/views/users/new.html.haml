@@ -1,0 +1,7 @@
+- @page_title = 'Signup'
+
+%h2= @page_title
+
+- semantic_form_for @user do |f|
+  = f.inputs :name, :email, :password, :password_confirmation
+  = f.commit_button 'Signup'

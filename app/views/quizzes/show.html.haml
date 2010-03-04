@@ -1,0 +1,22 @@
+- @page_title = @quiz.title
+
+#mid_nav
+  - if owner?
+    = link_to 'Edit Quiz', edit_quiz_path(@quiz), :class => 'edit'
+  
+
+%h2= @page_title
+
+- unless @quiz.description.blank?
+  %p=h @quiz.description
+
+.heading
+  %h3= 'Questions (' + @quiz.questions_count.to_s + ')'
+  = link_to 'Add Question', new_quiz_question_path(@quiz), :class => 'add' if owner?
+
+%ul#questions_list
+  - @quiz.questions.each do |question|
+    %li
+      = '#' + question.position.to_s
+      &ndash;
+      = link_to truncate(question.body, :length => 60), quiz_question_path(question)

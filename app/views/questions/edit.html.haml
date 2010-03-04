@@ -1,0 +1,15 @@
+- @page_title = "Edit Question ##{@question.position}"
+
+= quiz_link
+
+%h2= @page_title
+
+.form
+  - form_for @question, :url => quiz_question_path(@quiz, @question) do |f|
+    = f.error_messages
+    = f.text_area :body
+    %p= markdown
+    .submit
+      = submit_tag 'Update Question', :disable_with => 'Updating Question...'
+      %span or
+      = link_to 'Cancel', quiz_question_path(@quiz, @question), :class => 'cancel'
