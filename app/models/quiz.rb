@@ -2,12 +2,14 @@
 #
 # Table name: quizzes
 #
-#  id          :integer         not null, primary key
-#  category_id :integer
-#  title       :string(255)
-#  description :text
-#  created_at  :datetime
-#  updated_at  :datetime
+#  id              :integer         not null, primary key
+#  category_id     :integer
+#  user_id         :integer
+#  title           :string(255)
+#  description     :text
+#  questions_count :integer         default(0)
+#  created_at      :datetime
+#  updated_at      :datetime
 #
 
 class Quiz < ActiveRecord::Base
@@ -17,6 +19,11 @@ class Quiz < ActiveRecord::Base
   has_many :questions, :order => 'questions.position ASC',
                        :dependent => :destroy
   
+  has_many :quiz_participants, :dependent => :destroy
+                       
+  has_many :participants, :through => :quiz_participants,
+                          :source => :user
+                         
   validates_presence_of :title, :user_id
   
   validates_uniqueness_of :title, :case_sensitive => false

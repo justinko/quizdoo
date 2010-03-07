@@ -23,6 +23,7 @@ CREATE TABLE answers (
     question_id integer,
     body text,
     correct boolean DEFAULT false,
+    "position" integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -88,6 +89,7 @@ CREATE TABLE questions (
     quiz_id integer,
     body text,
     answers_count integer DEFAULT 0,
+    "position" integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -110,6 +112,40 @@ CREATE SEQUENCE questions_id_seq
 --
 
 ALTER SEQUENCE questions_id_seq OWNED BY questions.id;
+
+
+--
+-- Name: quiz_participants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE quiz_participants (
+    id integer NOT NULL,
+    user_id integer,
+    quiz_id integer,
+    correct_count integer DEFAULT 0,
+    incorrect_count integer DEFAULT 0,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: quiz_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE quiz_participants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: quiz_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE quiz_participants_id_seq OWNED BY quiz_participants.id;
 
 
 --
@@ -189,6 +225,40 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 
 
 --
+-- Name: user_answers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_answers (
+    id integer NOT NULL,
+    user_id integer,
+    question_id integer,
+    answer_id integer,
+    correct boolean DEFAULT false,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: user_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE user_answers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE user_answers_id_seq OWNED BY user_answers.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -257,6 +327,13 @@ ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('questions_id_seq'::re
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE quiz_participants ALTER COLUMN id SET DEFAULT nextval('quiz_participants_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
 
 
@@ -265,6 +342,13 @@ ALTER TABLE quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regcla
 --
 
 ALTER TABLE sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE user_answers ALTER COLUMN id SET DEFAULT nextval('user_answers_id_seq'::regclass);
 
 
 --
@@ -299,6 +383,14 @@ ALTER TABLE ONLY questions
 
 
 --
+-- Name: quiz_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY quiz_participants
+    ADD CONSTRAINT quiz_participants_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: quizzes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -312,6 +404,14 @@ ALTER TABLE ONLY quizzes
 
 ALTER TABLE ONLY sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_answers
+    ADD CONSTRAINT user_answers_pkey PRIMARY KEY (id);
 
 
 --
@@ -344,6 +444,13 @@ CREATE INDEX index_questions_on_quiz_id ON questions USING btree (quiz_id);
 
 
 --
+-- Name: index_quiz_participants_on_user_id_and_quiz_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_quiz_participants_on_user_id_and_quiz_id ON quiz_participants USING btree (user_id, quiz_id);
+
+
+--
 -- Name: index_quizzes_on_category_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -369,6 +476,27 @@ CREATE INDEX index_sessions_on_session_id ON sessions USING btree (session_id);
 --
 
 CREATE INDEX index_sessions_on_updated_at ON sessions USING btree (updated_at);
+
+
+--
+-- Name: index_user_answers_on_answer_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_answers_on_answer_id ON user_answers USING btree (answer_id);
+
+
+--
+-- Name: index_user_answers_on_question_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_answers_on_question_id ON user_answers USING btree (question_id);
+
+
+--
+-- Name: index_user_answers_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_answers_on_user_id ON user_answers USING btree (user_id);
 
 
 --

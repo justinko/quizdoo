@@ -1,0 +1,18 @@
+# == Schema Information
+#
+# Table name: quiz_participants
+#
+#  id              :integer         not null, primary key
+#  user_id         :integer
+#  quiz_id         :integer
+#  correct_count   :integer         default(0)
+#  incorrect_count :integer         default(0)
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
+one:
+  user: justin
+  quiz: rails
+  correct_count: 1
+  incorrect_count: 0

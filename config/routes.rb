@@ -37,11 +37,15 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resource :dashboard, :only => :show
   
-  map.resources :quizzes do |quiz|
+  map.resources :quizzes, :member => { :participate => :post,
+                                       :unparticipate => :delete } do |quiz|
     quiz.resources :questions do |question|
       question.resources :answers
+      question.resources :user_answers, :only => :create
     end
   end
+  
+  map.resources :user_answers, :only => :destroy
   
   map.resources :categories, :only => :show
   

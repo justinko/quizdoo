@@ -2,6 +2,15 @@
 
 %h2= @page_title
 
+%h3 Quizzes you are participating in
+
+- if @participating_quizzes.any?
+  %table
+    - @participating_quizzes.each do |quiz|
+      %tr
+        %td= link_to h(quiz.title), quiz_path(quiz)
+- else
+  = no_items('You are not participating in any quizzes.')
 
 - content_for :right do
   %h3 Your Quizzes

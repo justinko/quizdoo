@@ -49,6 +49,7 @@ class CreateModels < ActiveRecord::Migration
       t.integer :question_id
       t.text :body
       t.boolean :correct, :default => false
+      t.integer :position
       t.timestamps
     end
     
@@ -70,6 +71,24 @@ class CreateModels < ActiveRecord::Migration
     end
     
     add_index :categories, :name
+    
+    create_table :quiz_participants do |t|
+      t.integer :user_id, :quiz_id
+      t.integer :correct_count, :incorrect_count, :default => 0
+      t.timestamps
+    end
+    
+    add_index :quiz_participants, [:user_id, :quiz_id]
+    
+    create_table :user_answers do |t|
+      t.integer :user_id, :question_id, :answer_id
+      t.boolean :correct, :default => false
+      t.timestamps
+    end
+    
+    add_index :user_answers, :user_id
+    add_index :user_answers, :question_id
+    add_index :user_answers, :answer_id
   end
 
   def self.down
@@ -79,5 +98,7 @@ class CreateModels < ActiveRecord::Migration
     drop_table :answers
     drop_table :sessions
     drop_table :categories
+    drop_table :quiz_participants
+    drop_table :user_answers
   end
 end

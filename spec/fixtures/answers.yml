@@ -6,6 +6,7 @@
 #  question_id :integer
 #  body        :text
 #  correct     :boolean
+#  position    :integer
 #  created_at  :datetime
 #  updated_at  :datetime
 #
@@ -13,3 +14,9 @@
 one:
   question: one
   body: This is the body.
+  correct: true
+  
+two:
+  question: one
+  body: This is the body too.
+  correct: false

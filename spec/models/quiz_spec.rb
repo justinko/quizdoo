@@ -20,7 +20,9 @@ describe Quiz do
   should_belong_to :category,
                    :user
   
-  should_have_many :questions
+  should_have_many :questions,
+                   :quiz_participants,
+                   :participants
   
   should_validate_presence_of :title
   

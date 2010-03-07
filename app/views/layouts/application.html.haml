@@ -4,11 +4,11 @@
     %title= page_title
     = stylesheet_link_tag 'application'
     = google_jquery
-    = javascript_include_tag 'application'
+    = javascript_include_tag 'jquery.autogrow', 'application'
   %body
     #wrapper
       #header
-        = link_to image_tag('logo.png', :size => '180x75'), '/', :id => 'logo'
+        = link_to image_tag('logo.png', :size => '178x75'), '/', :id => 'logo'
       
         #nav
           %ul

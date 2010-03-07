@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   def require_user
     unless current_user
       store_location
-      flash[:notice] = 'Please login'
+      flash[:failure] = 'Please login'
       redirect_to login_url
       return false
     end
@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   def require_no_user
     if current_user
       store_location
-      flash[:notice] = 'Please logout'
+      flash[:failure] = 'Please logout'
       redirect_to root_url
       return false
     end
@@ -57,5 +57,9 @@ class ApplicationController < ActionController::Base
   
   def find_quiz
     @quiz = Quiz.find(params[:quiz_id] || params[:id])
+  end
+  
+  def find_question
+    @question = @quiz.questions.find(params[:question_id] || params[:id])
   end
 end

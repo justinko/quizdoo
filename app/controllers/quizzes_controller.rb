@@ -1,6 +1,6 @@
 class QuizzesController < ApplicationController
-  before_filter :require_user, :only => [:new, :edit, :update, :destroy]
-  before_filter :find_quiz, :only => [:show, :edit, :update, :destroy]
+  before_filter :require_user, :except => [:index, :show]
+  before_filter :find_quiz, :except => [:index, :new, :create]
   
   def index
     @recently_added = Quiz.recently_added
@@ -27,5 +27,23 @@ class QuizzesController < ApplicationController
   end
   
   def show
+  end
+  
+  def participate
+    current_user.participate!(@quiz)
+    flash[:success] = 'You are now participating in this quiz'
+  rescue ActiveRecord::RecordInvalid => errors
+    flash[:failure] = errors
+  ensure
+    redirect_to @quiz
+  end
+  
+  def unparticipate
+    current_user.unparticipate!(@quiz)
+    flash[:success] = 'You are no longer participating in this quiz'
+  rescue ActiveRecord::RecordNotFound
+    flash[:failure] = 'You are not a participate of this quiz'
+  ensure
+    redirect_to @quiz
   end
 end

@@ -1,5 +1,6 @@
 !gray_bg = #f5f5f5
 !green_bg = #5BC236
+!red_bg = #c00
 
 body
   :margin 0
@@ -77,12 +78,25 @@ hr#split
       :font-size 14px
       &.top
         :margin-top 20px
+      &.correct,
+      &.incorrect
+        :color #fff
+        :margin-top 5px
+        :padding 2px 5px
+        :font-size 12px
+      &.correct
+        :background = !green_bg
+      &.incorrect
+        :background = !red_bg
           
   #right
     :float right
     :width 340px
+    h3
+      :margin-top 0
 
 .submit
+  :float left
   span
     :color #888
  
@@ -107,7 +121,14 @@ hr#split
   form
     :margin 15px
     textarea
-      :width 90%
+      :width 530px
+    .formatting
+      :margin-top 12px
+      :float right
+      :margin-right 50px
+    .submit
+      :margin-top 12px
+      :margin-bottom 15px
  
 .new_ajax_form  
   :background = !gray_bg
@@ -125,6 +146,11 @@ hr#split
       :width 90%
   .submit
     :margin-top 8px
+    :margin-bottom 10px
+
+.checkbox
+  input
+    :margin-left 0
 
 ul#questions_list
   :float left
@@ -136,14 +162,20 @@ ul#questions_list
 ul#answers_list
   :clear both
   :padding 0
+  :float left
+  :width 100%
   li
     :list-style-type none
     :background = !gray_bg
     :border-left-width 5px
     :border-left-style solid
-    :border-left-color = !green_bg
+    :border-left-color = !gray_bg
     :padding 4px 8px
     :margin-bottom 10px
+    &.correct
+      :border-left-color = !green_bg
+    &.incorrect
+      :border-left-color = !red_bg
     
 .quiz_link
   :color #888
@@ -161,3 +193,39 @@ ul#answers_list
 #show_question
   :margin-bottom 20px
   :float left
+  
+.next_and_previous
+  :color #aaa
+  :margin-left 40px
+  .prev
+    :float left
+  .next
+    :float right
+
+.answered_count,
+.correct_incorrect
+  :float left
+  :border-top 1px solid #ddd
+  :width 300px
+  :padding-top 10px
+  :margin-top 20px
+  :margin-left 40px
+.answered_count
+  :font-size 16px
+  :color #aaa
+  strong
+    :color #222
+.correct_incorrect
+  :font-size 14px
+  :color #ccc
+  &:hover
+    :color #aaa
+    .correct
+      :color = !green_bg
+    .incorrect
+      :color = !red_bg
+    
+.try_again
+  :float left
+  a
+    :font-weight bold

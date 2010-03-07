@@ -12,4 +12,7 @@
     %br
     = f.password_field :password
   %p
+    = f.check_box :remember_me
+    = f.label :remember_me
+  %p
     = submit_tag 'Login', :disable_with => 'Logging in...'

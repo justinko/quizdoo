@@ -70,12 +70,26 @@ hr#split {
       font-size: 14px; }
       #content #left #mid_nav.top {
         margin-top: 20px; }
+      #content #left #mid_nav.correct,
+      #content #left #mid_nav.incorrect {
+        color: #fff;
+        margin-top: 5px;
+        padding: 2px 5px;
+        font-size: 12px; }
+      #content #left #mid_nav.correct {
+        background: #5bc236; }
+      #content #left #mid_nav.incorrect {
+        background: #cc0000; }
   #content #right {
     float: right;
     width: 340px; }
+    #content #right h3 {
+      margin-top: 0; }
 
-.submit span {
-  color: #888; }
+.submit {
+  float: left; }
+  .submit span {
+    color: #888; }
 
 .heading {
   background: #e5f2ff;
@@ -98,7 +112,14 @@ hr#split {
   .form form {
     margin: 15px; }
     .form form textarea {
-      width: 90%; }
+      width: 530px; }
+    .form form .formatting {
+      margin-top: 12px;
+      float: right;
+      margin-right: 50px; }
+    .form form .submit {
+      margin-top: 12px;
+      margin-bottom: 15px; }
 
 .new_ajax_form {
   background: #f5f5f5;
@@ -115,7 +136,11 @@ hr#split {
       margin-bottom: 8px;
       width: 90%; }
   .new_ajax_form .submit {
-    margin-top: 8px; }
+    margin-top: 8px;
+    margin-bottom: 10px; }
+
+.checkbox input {
+  margin-left: 0; }
 
 ul#questions_list {
   float: left;
@@ -126,15 +151,21 @@ ul#questions_list {
 
 ul#answers_list {
   clear: both;
-  padding: 0; }
+  padding: 0;
+  float: left;
+  width: 100%; }
   ul#answers_list li {
     list-style-type: none;
     background: #f5f5f5;
     border-left-width: 5px;
     border-left-style: solid;
-    border-left-color: #5bc236;
+    border-left-color: #f5f5f5;
     padding: 4px 8px;
     margin-bottom: 10px; }
+    ul#answers_list li.correct {
+      border-left-color: #5bc236; }
+    ul#answers_list li.incorrect {
+      border-left-color: #cc0000; }
 
 .quiz_link {
   color: #888;
@@ -152,3 +183,41 @@ ul#answers_list {
 #show_question {
   margin-bottom: 20px;
   float: left; }
+
+.next_and_previous {
+  color: #aaa;
+  margin-left: 40px; }
+  .next_and_previous .prev {
+    float: left; }
+  .next_and_previous .next {
+    float: right; }
+
+.answered_count,
+.correct_incorrect {
+  float: left;
+  border-top: 1px solid #ddd;
+  width: 300px;
+  padding-top: 10px;
+  margin-top: 20px;
+  margin-left: 40px; }
+
+.answered_count {
+  font-size: 16px;
+  color: #aaa; }
+  .answered_count strong {
+    color: #222; }
+
+.correct_incorrect {
+  font-size: 14px;
+  color: #ccc; }
+  .correct_incorrect:hover {
+    color: #aaa; }
+    .correct_incorrect:hover .correct {
+      color: #5bc236; }
+    .correct_incorrect:hover .incorrect {
+      color: #cc0000; }
+
+.try_again {
+  float: left; }
+  .try_again a {
+    font-weight: bold; }

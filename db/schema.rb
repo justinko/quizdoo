@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(:version => 20100228051430) do
     t.integer  "question_id"
     t.text     "body"
     t.boolean  "correct",     :default => false
+    t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -41,6 +42,17 @@ ActiveRecord::Schema.define(:version => 20100228051430) do
 
   add_index "questions", ["quiz_id"], :name => "index_questions_on_quiz_id"
 
+  create_table "quiz_participants", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "quiz_id"
+    t.integer  "correct_count",   :default => 0
+    t.integer  "incorrect_count", :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "quiz_participants", ["user_id", "quiz_id"], :name => "index_quiz_participants_on_user_id_and_quiz_id"
+
   create_table "quizzes", :force => true do |t|
     t.integer  "category_id"
     t.integer  "user_id"
@@ -63,6 +75,19 @@ ActiveRecord::Schema.define(:version => 20100228051430) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "user_answers", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "question_id"
+    t.integer  "answer_id"
+    t.boolean  "correct",     :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_answers", ["answer_id"], :name => "index_user_answers_on_answer_id"
+  add_index "user_answers", ["question_id"], :name => "index_user_answers_on_question_id"
+  add_index "user_answers", ["user_id"], :name => "index_user_answers_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

@@ -1,8 +1,14 @@
 - @page_title = @quiz.title
 
-#mid_nav
-  - if owner?
-    = link_to 'Edit Quiz', edit_quiz_path(@quiz), :class => 'edit'
+- if current_user
+  #mid_nav
+    - if owner?
+      = link_to 'Edit Quiz', edit_quiz_path(@quiz), :class => 'edit'
+    - else
+      - if current_user.participating?(@quiz)
+        = link_to 'Un-participate', unparticipate_quiz_path(@quiz), :method => :delete
+      - else
+        = link_to 'Participate', participate_quiz_path(@quiz), :method => :post
   
 
 %h2= @page_title
@@ -19,4 +25,4 @@
     %li
       = '#' + question.position.to_s
       &ndash;
-      = link_to truncate(question.body, :length => 60), quiz_question_path(question)
+      = link_to truncate(question.body, :length => 60), quiz_question_path(@quiz, question)

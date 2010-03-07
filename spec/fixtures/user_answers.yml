@@ -1,0 +1,17 @@
+# == Schema Information
+#
+# Table name: user_answers
+#
+#  id          :integer         not null, primary key
+#  user_id     :integer
+#  question_id :integer
+#  answer_id   :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
+one:
+  user: justin
+  question: one
+  answer: one
+  correct: true

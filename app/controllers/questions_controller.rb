@@ -19,6 +19,12 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answers = @question.answers
+    
+    if current_user and not owner?
+      @user_answer = current_user.answers.find_or_initialize_by_question_id(@question)
+      @total_answered = current_user.total_answered(@quiz)
+      @total_questions = @quiz.questions.count
+    end
   end
   
   def edit
@@ -30,11 +36,5 @@ class QuestionsController < ApplicationController
     else
       render :edit
     end
-  end
-  
-  private
-  
-  def find_question
-    @question = @quiz.questions.find(params[:id])
   end
 end

@@ -8,7 +8,7 @@
   - form_for @question, :url => quiz_questions_path(@quiz) do |f|
     = f.error_messages
     = f.text_area :body
-    %p= markdown
+    .formatting= markdown
     .submit
       = submit_tag 'Create Question', :disable_with => 'Creating Question...'
       %span or

@@ -6,6 +6,7 @@
 #  question_id :integer
 #  body        :text
 #  correct     :boolean
+#  position    :integer
 #  created_at  :datetime
 #  updated_at  :datetime
 #
@@ -17,7 +18,9 @@ describe Answer do
   
   should_belong_to :question
   
-  should_validate_presence_of :question,
+  should_have_many :user_answers
+  
+  should_validate_presence_of :question_id,
                               :body
                               
   should_validate_uniqueness_of :body, :scope => :question_id
