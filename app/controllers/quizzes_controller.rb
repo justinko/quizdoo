@@ -1,6 +1,7 @@
 class QuizzesController < ApplicationController
   before_filter :require_user, :except => [:index, :show]
   before_filter :find_quiz, :except => [:index, :new, :create]
+  before_filter :authorize_quiz, :only => [:edit, :update]
   
   def index
     @recently_added = Quiz.recently_added
@@ -24,6 +25,11 @@ class QuizzesController < ApplicationController
   end
   
   def update
+    if @quiz.update_attributes(params[:quiz])
+      redirect_to @quiz
+    else
+      render :edit
+    end
   end
   
   def show

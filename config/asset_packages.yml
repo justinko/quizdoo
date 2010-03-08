@@ -1,0 +1,6 @@
+--- 
+javascripts: 
+- base: 
+  - jquery.form
+  - jquery.autogrow
+  - application

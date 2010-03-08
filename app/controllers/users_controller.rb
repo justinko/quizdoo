@@ -8,8 +8,8 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user])
-    if @user.save
-      flash[:success] = "Account registered!"
+    if verify_recaptcha(:model => @user) && @user.save
+      flash[:success] = 'Welcome to Quizdoo!'
       redirect_back_or_default root_url
     else
       render :new
@@ -23,8 +23,8 @@ class UsersController < ApplicationController
   def update
     @user = @current_user
     if @user.update_attributes(params[:user])
-      flash[:success] = "Account updated!"
-      redirect_to user_url
+      flash[:success] = 'Account updated'
+      redirect_to edit_user_url
     else
       render :edit
     end

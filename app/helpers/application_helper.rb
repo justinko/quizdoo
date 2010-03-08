@@ -4,7 +4,10 @@ module ApplicationHelper
     ary = []
     ary << 'Quizdoo'
     
-    if @quiz and not @quiz.title == @page_title
+    if @quiz and not
+       @quiz.new_record? and not
+       @quiz.title == @page_title
+      
       ary << @quiz.title
     end
     
@@ -14,10 +17,24 @@ module ApplicationHelper
   end
   
   def markdown
-    link_to 'Formatting Help', 'http://effectif.com/nesta/markdown-cheat-sheet', :popup => true
+    link = link_to 'Formatting Help',
+                    'http://effectif.com/nesta/markdown-cheat-sheet',
+                    :popup => true
+                    
+    content_tag :div, link, :class => 'formatting'
   end
   
-  def no_items(text)
+  def no_items(text = nil, &block)
+    text = if block_given?
+      capture_haml(&block).chomp
+    else
+      text
+    end
+    
     content_tag(:div, text, :class => 'no_items')
+  end
+  
+  def ajax_dom_id(record)
+    '#' + dom_id(record)
   end  
 end

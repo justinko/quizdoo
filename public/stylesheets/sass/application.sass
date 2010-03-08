@@ -1,6 +1,6 @@
 !gray_bg = #f5f5f5
-!green_bg = #5BC236
-!red_bg = #c00
+!green = #5BC236
+!red = #c00
 
 body
   :margin 0
@@ -22,7 +22,18 @@ a
   &.edit,
   &.delete,
   &.cancel
-    :color #c00
+    :color = !red
+
+label
+  :display block
+  :font-weight bold
+  :margin-bottom 1px
+
+.right
+  :float right
+
+.warning
+  :color = !red
 
 a#logo
   img
@@ -45,6 +56,13 @@ a#logo
         a
           :display block
           :font-size 16px
+          
+body#users #nav a.account,
+body#users #nav a.signup,
+body#user_sessions #nav a.login,
+body#quizzes #nav a.quizzes,
+body#dashboards #nav a.dashboard
+  :font-weight bold
           
 hr#split
   :margin 0
@@ -85,18 +103,35 @@ hr#split
         :padding 2px 5px
         :font-size 12px
       &.correct
-        :background = !green_bg
+        :background = !green
       &.incorrect
-        :background = !red_bg
+        :background = !red
           
   #right
     :float right
     :width 340px
     h3
       :margin-top 0
+      :margin-left 40px
+    ul
+      :margin-left 40px
+    .no_items
+      :float right
+      :margin-left 40px
+      :width 300px
+      :font-size 12px
+      :padding 20px 0
+
+#footer
+  :width 960px
+  :margin 40px auto 20px
+  :border-top 1px dotted #ccc
+  :padding 10px 0
+  :color #aaa
 
 .submit
   :float left
+  :width 100%
   span
     :color #888
  
@@ -111,7 +146,7 @@ hr#split
   a.add
     :float right
     :padding 5px 8px
-    :background = !green_bg
+    :background = !green
     :color #fff
 
 .form
@@ -120,8 +155,12 @@ hr#split
   :width 100%
   form
     :margin 15px
-    textarea
+    textarea,
+    input.big
       :width 530px
+    input.big
+      :font-size 14px
+      :padding 2px
     .formatting
       :margin-top 12px
       :float right
@@ -134,7 +173,7 @@ hr#split
   :background = !gray_bg
   :float left
   :width 100%
-  :margin-bottom 20px
+  :margin-bottom 10px
   :display none
   h4
     :color #2eae00
@@ -147,10 +186,27 @@ hr#split
   .submit
     :margin-top 8px
     :margin-bottom 10px
+    
+.inline_edit_form
+  :margin 10px
+  :float left
+  :width 85%
+  form
+    textarea
+      :width 95%
+      :margin-bottom 8px
+    .submit
+      :margin-top 8px
+
+.errors
+  :color = !red
 
 .checkbox
   input
     :margin-left 0
+  label
+    :display inline
+    :font-weight normal
 
 ul#questions_list
   :float left
@@ -165,17 +221,37 @@ ul#answers_list
   :float left
   :width 100%
   li
+    :float left
+    :width 100%
     :list-style-type none
     :background = !gray_bg
-    :border-left-width 5px
-    :border-left-style solid
-    :border-left-color = !gray_bg
-    :padding 4px 8px
     :margin-bottom 10px
-    &.correct
-      :border-left-color = !green_bg
-    &.incorrect
-      :border-left-color = !red_bg
+    .show_body
+      :border-left-width 5px
+      :border-left-style solid
+      :border-left-color = !gray_bg
+      :width 90%
+      :padding-left 10px
+      :float left
+    &.correct .show_body
+      :border-left-color = !green
+    &.incorrect .show_body
+      :border-left-color = !red
+    .edit_link,
+    .delete_link
+      :float right
+      :margin 10px
+    .edit_link
+      :display none
+    &:hover
+      .edit_link
+        :display block
+  &.participating
+    .show_body
+      :padding-left 7px
+      .radio_button
+        :float left
+        :padding-right 12px
     
 .quiz_link
   :color #888
@@ -221,11 +297,30 @@ ul#answers_list
   &:hover
     :color #aaa
     .correct
-      :color = !green_bg
+      :color = !green
     .incorrect
-      :color = !red_bg
+      :color = !red
     
 .try_again
   :float left
+  :color #666
   a
     :font-weight bold
+
+#content #left  
+  .errorExplanation
+    :border-style solid
+    :border-width 2px
+    :border-color = !red
+    :background #fff
+    h2
+      :background = !red
+      :color #fff
+      :padding 7px 12px 10px
+      :font-size 14px
+    p
+      :display none
+  .formError
+    :color = !red
+    :font-weight bold
+    :margin-top 3px

@@ -18,7 +18,18 @@ a {
   a.edit,
   a.delete,
   a.cancel {
-    color: #c00; }
+    color: #cc0000; }
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 1px; }
+
+.right {
+  float: right; }
+
+.warning {
+  color: #cc0000; }
 
 a#logo img {
   border: 0; }
@@ -38,6 +49,13 @@ a#logo img {
       #header #nav ul li a {
         display: block;
         font-size: 16px; }
+
+body#users #nav a.account,
+body#users #nav a.signup,
+body#user_sessions #nav a.login,
+body#quizzes #nav a.quizzes,
+body#dashboards #nav a.dashboard {
+  font-weight: bold; }
 
 hr#split {
   margin: 0;
@@ -84,10 +102,27 @@ hr#split {
     float: right;
     width: 340px; }
     #content #right h3 {
-      margin-top: 0; }
+      margin-top: 0;
+      margin-left: 40px; }
+    #content #right ul {
+      margin-left: 40px; }
+    #content #right .no_items {
+      float: right;
+      margin-left: 40px;
+      width: 300px;
+      font-size: 12px;
+      padding: 20px 0; }
+
+#footer {
+  width: 960px;
+  margin: 40px auto 20px;
+  border-top: 1px dotted #ccc;
+  padding: 10px 0;
+  color: #aaa; }
 
 .submit {
-  float: left; }
+  float: left;
+  width: 100%; }
   .submit span {
     color: #888; }
 
@@ -111,8 +146,12 @@ hr#split {
   width: 100%; }
   .form form {
     margin: 15px; }
-    .form form textarea {
+    .form form textarea,
+    .form form input.big {
       width: 530px; }
+    .form form input.big {
+      font-size: 14px;
+      padding: 2px; }
     .form form .formatting {
       margin-top: 12px;
       float: right;
@@ -125,7 +164,7 @@ hr#split {
   background: #f5f5f5;
   float: left;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   display: none; }
   .new_ajax_form h4 {
     color: #2eae00;
@@ -139,8 +178,24 @@ hr#split {
     margin-top: 8px;
     margin-bottom: 10px; }
 
+.inline_edit_form {
+  margin: 10px;
+  float: left;
+  width: 85%; }
+  .inline_edit_form form textarea {
+    width: 95%;
+    margin-bottom: 8px; }
+  .inline_edit_form form .submit {
+    margin-top: 8px; }
+
+.errors {
+  color: #cc0000; }
+
 .checkbox input {
   margin-left: 0; }
+.checkbox label {
+  display: inline;
+  font-weight: normal; }
 
 ul#questions_list {
   float: left;
@@ -155,17 +210,35 @@ ul#answers_list {
   float: left;
   width: 100%; }
   ul#answers_list li {
+    float: left;
+    width: 100%;
     list-style-type: none;
     background: #f5f5f5;
-    border-left-width: 5px;
-    border-left-style: solid;
-    border-left-color: #f5f5f5;
-    padding: 4px 8px;
     margin-bottom: 10px; }
-    ul#answers_list li.correct {
+    ul#answers_list li .show_body {
+      border-left-width: 5px;
+      border-left-style: solid;
+      border-left-color: #f5f5f5;
+      width: 90%;
+      padding-left: 10px;
+      float: left; }
+    ul#answers_list li.correct .show_body {
       border-left-color: #5bc236; }
-    ul#answers_list li.incorrect {
+    ul#answers_list li.incorrect .show_body {
       border-left-color: #cc0000; }
+    ul#answers_list li .edit_link,
+    ul#answers_list li .delete_link {
+      float: right;
+      margin: 10px; }
+    ul#answers_list li .edit_link {
+      display: none; }
+    ul#answers_list li:hover .edit_link {
+      display: block; }
+  ul#answers_list.participating .show_body {
+    padding-left: 7px; }
+    ul#answers_list.participating .show_body .radio_button {
+      float: left;
+      padding-right: 12px; }
 
 .quiz_link {
   color: #888;
@@ -218,6 +291,24 @@ ul#answers_list {
       color: #cc0000; }
 
 .try_again {
-  float: left; }
+  float: left;
+  color: #666; }
   .try_again a {
     font-weight: bold; }
+
+#content #left .errorExplanation {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #cc0000;
+  background: #fff; }
+  #content #left .errorExplanation h2 {
+    background: #cc0000;
+    color: #fff;
+    padding: 7px 12px 10px;
+    font-size: 14px; }
+  #content #left .errorExplanation p {
+    display: none; }
+#content #left .formError {
+  color: #cc0000;
+  font-weight: bold;
+  margin-top: 3px; }

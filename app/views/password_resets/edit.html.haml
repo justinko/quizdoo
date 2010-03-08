@@ -1,0 +1,22 @@
+- @page_title = 'Change Password'
+
+%h2= @page_title
+
+.form
+  - form_for @user, :url => password_reset_path, :method => :put do |f|
+  
+    %p= @user.name + ', please enter your new password below.'
+    %p
+      = f.label :password
+      = f.password_field :password, :size => 50
+      = f.error_message_on :password, :prepend_text => 'Password '
+    %p
+      = f.label :password_confirmation, 'Password again'
+      = f.password_field :password_confirmation, :size => 50
+      = f.error_message_on :password_confirmation, :prepend_text => 'Password confirmation '
+      
+    .submit
+      = submit_tag 'Update Password', :disable_with => 'Updating Password...'
+      %span or
+      = link_to 'Back to Login', login_url
+    

@@ -45,12 +45,17 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
+  map.resources :answers, :except => [:new, :create]
+  
   map.resources :user_answers, :only => :destroy
   
   map.resources :categories, :only => :show
   
   map.resources :users, :only => [:new, :create]
+  
   map.resource :user, :only => [:edit, :update]
+  
+  map.resources :password_resets, :except => :destroy
   
   map.resource :user_session
     

@@ -27,6 +27,7 @@ describe User do
   fixtures :users, :quizzes
   
   should_have_many :quizzes,
+                   :questions,
                    :participations,
                    :participating_quizzes,
                    :answers
@@ -37,7 +38,7 @@ describe User do
   
   describe 'participation' do
     before do
-      QuizParticipant.delete_all
+      Participation.delete_all
       
       @user = users(:justin)
       @quiz = quizzes(:rails)
@@ -46,7 +47,7 @@ describe User do
     it 'should create a new quiz participation record' do
       lambda {
         @user.participate!(@quiz)
-      }.should change(QuizParticipant, :count).by(1)
+      }.should change(Participation, :count).by(1)
     end
     
     it { @user.participating?(@quiz).should be_false }
@@ -61,7 +62,7 @@ describe User do
       it 'should delete the record' do
         lambda {
           @user.unparticipate!(@quiz)
-        }.should change(QuizParticipant, :count).by(-1)
+        }.should change(Participation, :count).by(-1)
       end
     end
   end
@@ -117,8 +118,67 @@ describe User do
     it { users(:justin).total_answered(quizzes(:rails)).should eql(1) }
   end
   
-  describe '#answered_count' do
-    it { users(:justin).answered_count(quizzes(:rails), :correct).should eql(1) }
-    it { users(:justin).answered_count(quizzes(:rails), :incorrect).should eql(0) }
+  describe '#can_edit_answer?' do
+    fixtures :answers
+    
+    before { @answer = answers(:one) }
+    
+    it { users(:justin).can_edit_answer?(@answer).should be_true }
+    
+    describe 'with answer that has no question' do
+      before do
+        @answer.update_attribute(:question_id, nil)
+      end
+      
+      it { users(:justin).can_edit_answer?(@answer).should be_false }
+    end
+  end
+  
+  describe '#can_edit_question?' do
+    fixtures :questions
+    
+    before { @question = questions(:one) }
+    
+    it { users(:justin).can_edit_question?(@question).should be_true }
+    
+    describe 'with question that has no quiz' do
+      before do
+        @question.update_attribute(:quiz_id, nil)
+      end
+      
+      it { users(:justin).can_edit_quiz?(@question).should be_false }
+    end
+  end
+  
+  describe '#can_edit_quiz?' do
+    before { @quiz = quizzes(:rails) }
+    
+    it { users(:justin).can_edit_quiz?(@quiz).should be_true }
+    
+    describe 'with quiz that has no user' do
+      before do
+        @quiz.update_attribute(:user_id, nil)
+      end
+      
+      it { users(:justin).can_edit_quiz?(@quiz).should be_false }
+    end
+  end
+  
+  describe '#deliver_password_reset_instructions!' do
+    it 'should send an email to the user' do
+      user = users(:justin)
+      Emailer.expects(:deliver_password_reset_instructions).with(user).once
+      user.deliver_password_reset_instructions!
+    end
+  end
+  
+  describe '#find_participation' do
+    fixtures :participations
+    
+    it 'should find the correct participation record' do
+      participation = participations(:one)
+      quiz = quizzes(:rails)
+      users(:justin).find_participation(quiz).should eql(participation)
+    end
   end
 end

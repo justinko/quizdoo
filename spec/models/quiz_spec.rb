@@ -21,7 +21,7 @@ describe Quiz do
                    :user
   
   should_have_many :questions,
-                   :quiz_participants,
+                   :participations,
                    :participants
   
   should_validate_presence_of :title

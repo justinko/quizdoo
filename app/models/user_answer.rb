@@ -6,6 +6,7 @@
 #  user_id     :integer
 #  question_id :integer
 #  answer_id   :integer
+#  correct     :boolean
 #  created_at  :datetime
 #  updated_at  :datetime
 #
@@ -32,9 +33,9 @@ class UserAnswer < ActiveRecord::Base
   end
   
   def update_correct_or_incorrect_count
-    if quiz_participant = user.find_participation(question.quiz)
+    if participation = user.find_participation(question.quiz)
       count_field = correct? ? :correct_count : :incorrect_count
-      quiz_participant.increment!(count_field)
+      participation.increment!(count_field)
     end
   end
 end

@@ -55,15 +55,6 @@ class CreateModels < ActiveRecord::Migration
     
     add_index :answers, :question_id
     
-    create_table :sessions do |t|
-      t.string :session_id, :null => false
-      t.text :data
-      t.timestamps
-    end
-
-    add_index :sessions, :session_id
-    add_index :sessions, :updated_at
-    
     create_table :categories do |t|
       t.string :name
       t.integer :quizzes_count, :default => 0
@@ -72,13 +63,13 @@ class CreateModels < ActiveRecord::Migration
     
     add_index :categories, :name
     
-    create_table :quiz_participants do |t|
+    create_table :participations do |t|
       t.integer :user_id, :quiz_id
       t.integer :correct_count, :incorrect_count, :default => 0
       t.timestamps
     end
     
-    add_index :quiz_participants, [:user_id, :quiz_id]
+    add_index :participations, [:user_id, :quiz_id]
     
     create_table :user_answers do |t|
       t.integer :user_id, :question_id, :answer_id
@@ -96,9 +87,8 @@ class CreateModels < ActiveRecord::Migration
     drop_table :quizzes
     drop_table :questions
     drop_table :answers
-    drop_table :sessions
     drop_table :categories
-    drop_table :quiz_participants
+    drop_table :participations
     drop_table :user_answers
   end
 end

@@ -1,0 +1,16 @@
+%p
+  = f.label :name
+  = f.text_field :name, :size => 50
+  = f.error_message_on :name, :prepend_text => 'Name '
+%p
+  = f.label :email
+  = f.text_field :email, :size => 50
+  = f.error_message_on :email, :prepend_text => 'Email '
+%p
+  = f.label :password
+  = f.password_field :password, :size => 50
+  = f.error_message_on :password, :prepend_text => 'Password '
+%p
+  = f.label :password_confirmation
+  = f.password_field :password_confirmation, :size => 50
+  = f.error_message_on :password_confirmation, :prepend_text => 'Password confirmation '

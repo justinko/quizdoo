@@ -2,6 +2,8 @@ class QuestionsController < ApplicationController
   before_filter :require_user, :except => :show
   before_filter :find_quiz
   before_filter :find_question, :except => [:new, :create]
+  before_filter :authorize_quiz, :except => :show
+  before_filter :authorize_question, :except => :show
   
   def new
     @question = Question.new
@@ -24,6 +26,7 @@ class QuestionsController < ApplicationController
       @user_answer = current_user.answers.find_or_initialize_by_question_id(@question)
       @total_answered = current_user.total_answered(@quiz)
       @total_questions = @quiz.questions.count
+      @participation = current_user.find_participation(@quiz)
     end
   end
   

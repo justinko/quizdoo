@@ -6,6 +6,7 @@
 #  user_id     :integer
 #  question_id :integer
 #  answer_id   :integer
+#  correct     :boolean
 #  created_at  :datetime
 #  updated_at  :datetime
 #
@@ -47,14 +48,14 @@ describe UserAnswer do
       }.should change(UserAnswer, :count).by(1)
     end
     
-    it 'should increment correct_count for quiz participant' do
-      QuizParticipant.any_instance.expects(:increment!).with(:correct_count).once
+    it 'should increment correct_count for participation' do
+      Participation.any_instance.expects(:increment!).with(:correct_count).once
       @user_answer.save!
     end
     
-    it 'should increment incorrect_count for quiz participant' do
+    it 'should increment incorrect_count for participation' do
       @user_answer.answer = answers(:two)
-      QuizParticipant.any_instance.expects(:increment!).with(:incorrect_count).once
+      Participation.any_instance.expects(:increment!).with(:incorrect_count).once
       @user_answer.save!
     end
   end

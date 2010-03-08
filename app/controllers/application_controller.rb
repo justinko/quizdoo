@@ -7,6 +7,13 @@ class ApplicationController < ActionController::Base
 
   filter_parameter_logging :password, :password_confirmation
   
+  class AccessDenied < StandardError; end
+  
+  rescue_from AccessDenied do |exception|
+    flash[:failure] = exception.message
+    redirect_to root_url
+  end
+  
   helper_method :current_user_session,
                 :current_user,
                 :owner?
@@ -61,5 +68,17 @@ class ApplicationController < ActionController::Base
   
   def find_question
     @question = @quiz.questions.find(params[:question_id] || params[:id])
+  end
+  
+  def authorize_quiz
+    access_denied! unless current_user.can_edit_quiz?(@quiz)
+  end
+  
+  def authorize_question
+    access_denied! unless current_user.can_edit_question?(@question)
+  end
+  
+  def access_denied!(message = 'You do not have access to this page')
+    raise AccessDenied, message
   end
 end

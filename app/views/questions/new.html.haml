@@ -6,9 +6,7 @@
 
 .form
   - form_for @question, :url => quiz_questions_path(@quiz) do |f|
-    = f.error_messages
-    = f.text_area :body
-    .formatting= markdown
+    = render :partial => 'form', :locals => {:f => f}
     .submit
       = submit_tag 'Create Question', :disable_with => 'Creating Question...'
       %span or

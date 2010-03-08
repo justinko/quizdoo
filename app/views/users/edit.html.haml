@@ -1,0 +1,8 @@
+- @page_title = 'Account'
+
+%h2= @page_title
+
+.form
+  - form_for @user, :url => user_path do |f|
+    = render :partial => 'form', :locals => {:f => f}
+    .submit= submit_tag 'Update Account', :disable_with => 'Updating Account...'

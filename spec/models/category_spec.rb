@@ -19,4 +19,8 @@ describe Category do
   should_validate_presence_of :name
   
   should_validate_uniqueness_of :name
+  
+  describe '#for_select' do
+    it { lambda { Category.for_select }.should_not raise_exception }
+  end
 end

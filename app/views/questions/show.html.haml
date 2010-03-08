@@ -13,7 +13,10 @@
 #show_question= @question.body.to_html
 
 .heading
-  %h3 Answers
+  %h3
+    Answers
+    - if owner? and @answers.any? and not @question.has_correct_answer?
+      %span.warning &ndash; This question lacks a correct answer
   = link_to 'Add Answer', '#', :class => 'add ajax' if owner?
 
 
@@ -28,33 +31,35 @@
           = f.check_box :correct
           = f.label :correct, 'Is this the correct answer?'
         .submit
-          = submit_tag 'Add Answer'
+          = submit_tag 'Add Answer', :disable_with => 'Adding Answer...'
           %span or
           = link_to 'Cancel', '#', :class => 'cancel'
 
     - if @answers.any?
-      %ul#answers_list
-        - @answers.each do |answer|
-          %li{:class => ('correct' if answer.correct?)}= answer.body
+      %ul#answers_list= render :partial => 'answers/answer', :collection => @answers
     - else
       = no_items('No answers have been added yet.')
       
   - else
   
     - if current_user.participating?(@quiz)
-      - if @answers.any? and @question.has_correct_answer?
+      - if @answers.any? and @answers.any?(&:correct?)
         - form_for @user_answer, :url => quiz_question_user_answers_path(@quiz, @question) do |f|
-          %ul#answers_list
+          %ul#answers_list.participating
             - @answers.each do |answer|
               %li{:class => user_answer_li_class(answer)}
-                = f.radio_button :answer_id, answer.id, :disabled => !@user_answer.new_record?
-                = f.label :answer_id, answer.body, :value => answer.id
+                .show_body
+                  .radio_button
+                    %p= f.radio_button :answer_id, answer.id, :disabled => !@user_answer.new_record?
+                  = answer.body.to_html
           
           - if @user_answer.new_record?
             .submit= submit_tag 'Submit Answer', :disable_with => 'Submitting Answer...'
           - else
             .try_again
-              - if all_questions_answered?
+              - if @user_answer.correct?
+                Congratulations! You answered this question correctly.
+              - elsif all_questions_answered?
                 = link_to 'Try Again', user_answer_path(@user_answer), :method => :delete
               - else
                 You must
@@ -82,7 +87,7 @@
       answered out of
       %strong= number_with_delimiter(@total_questions)
     .correct_incorrect
-      %strong.correct= number_with_delimiter(current_user.answered_count(@quiz, :correct))
+      %strong.correct= number_with_delimiter(@participation.try(:correct_count) || 0)
       correct,
-      %strong.incorrect= number_with_delimiter(current_user.answered_count(@quiz, :incorrect))
+      %strong.incorrect= number_with_delimiter(@participation.try(:incorrect_count) || 0)
       incorrect for this quiz

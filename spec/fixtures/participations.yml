@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: quiz_participants
+# Table name: participations
 #
 #  id              :integer         not null, primary key
 #  user_id         :integer

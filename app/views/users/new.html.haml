@@ -2,6 +2,10 @@
 
 %h2= @page_title
 
-- semantic_form_for @user do |f|
-  = f.inputs :name, :email, :password, :password_confirmation
-  = f.commit_button 'Signup'
+.form
+  - form_for @user do |f|
+    = render :partial => 'form', :locals => {:f => f}
+    = recaptcha_tags
+    - if @user.errors['base']
+      .formError= @user.errors['base']
+    .submit= submit_tag 'Signup', :disable_with => 'Creating Account...'

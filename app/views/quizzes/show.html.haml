@@ -25,4 +25,4 @@
     %li
       = '#' + question.position.to_s
       &ndash;
-      = link_to truncate(question.body, :length => 60), quiz_question_path(@quiz, question)
+      = link_to truncate(question.body.to_s, :length => 60), quiz_question_path(@quiz, question)

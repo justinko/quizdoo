@@ -10,7 +10,9 @@
       %tr
         %td= link_to h(quiz.title), quiz_path(quiz)
 - else
-  = no_items('You are not participating in any quizzes.')
+  = no_items do
+    You are not participating in any quizzes.
+    = link_to 'View all quizzes', quizzes_path
 
 - content_for :right do
   %h3 Your Quizzes
@@ -19,3 +21,8 @@
     %ul
       - @your_quizzes.each do |quiz|
         %li= link_to quiz.title, quiz_path(quiz)
+  - else
+    = no_items do
+      You have not created any quizzes.
+      %br
+      = link_to 'Create one now', new_quiz_path

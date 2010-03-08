@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: quiz_participants
+# Table name: participations
 #
 #  id              :integer         not null, primary key
 #  user_id         :integer
@@ -11,7 +11,7 @@
 #  updated_at      :datetime
 #
 
-class QuizParticipant < ActiveRecord::Base
+class Participation < ActiveRecord::Base
   belongs_to :user
   belongs_to :quiz
   

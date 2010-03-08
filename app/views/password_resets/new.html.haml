@@ -1,0 +1,15 @@
+- @page_title = 'Forgot Password'
+
+%h2= @page_title
+
+.form
+  - form_tag password_resets_path, :id => 'new_password_reset' do
+    %p Please enter your email below and instructions to reset your password will be emailed to you.
+    %p
+      = label_tag :email
+      = text_field_tag :email, nil, :size => 50
+
+    .submit
+      = submit_tag 'Send Password Reset Email', :disable_with => 'Sending Password Reset Email...'
+      %span or
+      = link_to 'Back to Login', login_url

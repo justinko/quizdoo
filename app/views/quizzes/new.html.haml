@@ -2,6 +2,11 @@
 
 %h2= @page_title
 
-- semantic_form_for @quiz do |f|
-  = f.inputs
-  = f.buttons
+.form
+  - form_for @quiz do |f|
+    = render :partial => 'form', :locals => {:f => f}
+      
+    .submit
+      = submit_tag 'Create Quiz', :disable_with => 'Creating Quiz...'
+      %span or
+      = link_to 'Cancel', quizzes_path, :class => 'cancel'

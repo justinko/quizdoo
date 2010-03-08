@@ -1,0 +1,12 @@
+- @page_title = 'Edit Quiz'
+
+%h2= @page_title
+
+.form
+  - form_for @quiz do |f|
+    = render :partial => 'form', :locals => {:f => f}
+      
+    .submit
+      = submit_tag 'Update Quiz', :disable_with => 'Updating Quiz...'
+      %span or
+      = link_to 'Cancel', quiz_path(@quiz), :class => 'cancel'

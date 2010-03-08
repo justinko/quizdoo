@@ -19,9 +19,9 @@ class Quiz < ActiveRecord::Base
   has_many :questions, :order => 'questions.position ASC',
                        :dependent => :destroy
   
-  has_many :quiz_participants, :dependent => :destroy
+  has_many :participations, :dependent => :destroy
                        
-  has_many :participants, :through => :quiz_participants,
+  has_many :participants, :through => :participations,
                           :source => :user
                          
   validates_presence_of :title, :user_id

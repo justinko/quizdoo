@@ -13,5 +13,6 @@
 #
 
 rails:
+  user: justin
   title: Ruby on Rails
   category: programming

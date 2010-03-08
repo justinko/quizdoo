@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: quiz_participants
+# Table name: participations
 #
 #  id              :integer         not null, primary key
 #  user_id         :integer
@@ -13,8 +13,8 @@
 
 require 'spec_helper'
 
-describe QuizParticipant do
-  fixtures :quiz_participants
+describe Participation do
+  fixtures :participations
   
   should_belong_to :user, :quiz
   

@@ -81,6 +81,40 @@ ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
 
 
 --
+-- Name: participations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE participations (
+    id integer NOT NULL,
+    user_id integer,
+    quiz_id integer,
+    correct_count integer DEFAULT 0,
+    incorrect_count integer DEFAULT 0,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: participations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE participations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: participations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE participations_id_seq OWNED BY participations.id;
+
+
+--
 -- Name: questions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -112,40 +146,6 @@ CREATE SEQUENCE questions_id_seq
 --
 
 ALTER SEQUENCE questions_id_seq OWNED BY questions.id;
-
-
---
--- Name: quiz_participants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE quiz_participants (
-    id integer NOT NULL,
-    user_id integer,
-    quiz_id integer,
-    correct_count integer DEFAULT 0,
-    incorrect_count integer DEFAULT 0,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: quiz_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE quiz_participants_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
---
--- Name: quiz_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE quiz_participants_id_seq OWNED BY quiz_participants.id;
 
 
 --
@@ -190,38 +190,6 @@ ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
 );
-
-
---
--- Name: sessions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE sessions (
-    id integer NOT NULL,
-    session_id character varying(255) NOT NULL,
-    data text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE sessions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
---
--- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 
 
 --
@@ -320,6 +288,13 @@ ALTER TABLE categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE participations ALTER COLUMN id SET DEFAULT nextval('participations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('questions_id_seq'::regclass);
 
 
@@ -327,21 +302,7 @@ ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('questions_id_seq'::re
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE quiz_participants ALTER COLUMN id SET DEFAULT nextval('quiz_participants_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regclass);
 
 
 --
@@ -375,6 +336,14 @@ ALTER TABLE ONLY categories
 
 
 --
+-- Name: participations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY participations
+    ADD CONSTRAINT participations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: questions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -383,27 +352,11 @@ ALTER TABLE ONLY questions
 
 
 --
--- Name: quiz_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY quiz_participants
-    ADD CONSTRAINT quiz_participants_pkey PRIMARY KEY (id);
-
-
---
 -- Name: quizzes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY quizzes
     ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
-
-
---
--- Name: sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY sessions
-    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
 
 
 --
@@ -437,17 +390,17 @@ CREATE INDEX index_categories_on_name ON categories USING btree (name);
 
 
 --
+-- Name: index_participations_on_user_id_and_quiz_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_participations_on_user_id_and_quiz_id ON participations USING btree (user_id, quiz_id);
+
+
+--
 -- Name: index_questions_on_quiz_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_questions_on_quiz_id ON questions USING btree (quiz_id);
-
-
---
--- Name: index_quiz_participants_on_user_id_and_quiz_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_quiz_participants_on_user_id_and_quiz_id ON quiz_participants USING btree (user_id, quiz_id);
 
 
 --
@@ -462,20 +415,6 @@ CREATE INDEX index_quizzes_on_category_id ON quizzes USING btree (category_id);
 --
 
 CREATE INDEX index_quizzes_on_user_id ON quizzes USING btree (user_id);
-
-
---
--- Name: index_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_sessions_on_session_id ON sessions USING btree (session_id);
-
-
---
--- Name: index_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_sessions_on_updated_at ON sessions USING btree (updated_at);
 
 
 --

@@ -57,3 +57,9 @@ Spec::Runner.configure do |config|
   #
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
 end
+
+def login(user)
+  @request.host = 'quizdoo.dev'
+  activate_authlogic
+  UserSession.create(user)
+end
