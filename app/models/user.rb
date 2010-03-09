@@ -49,7 +49,8 @@ class User < ActiveRecord::Base
   end
   
   def unparticipate!(quiz)
-    participations.find_by_quiz_id(quiz).destroy
+    find_participation(quiz).destroy
+    UserAnswer.destroy_all(:user_id => id, :question_id => quiz.question_ids)
   end
   
   def participating?(quiz)
@@ -57,7 +58,8 @@ class User < ActiveRecord::Base
   end
   
   def answer_question!(question, params)
-    answer = question.answers.find(params[:user_answer][:answer_id])
+    answer_id = params[:user_answer][:answer_id]
+    answer = question.answers.find(answer_id)
     answers.find_or_create_by_question_id_and_answer_id(question.id, answer.id)
   end
   

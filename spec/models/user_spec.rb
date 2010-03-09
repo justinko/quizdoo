@@ -64,6 +64,12 @@ describe User do
           @user.unparticipate!(@quiz)
         }.should change(Participation, :count).by(-1)
       end
+      
+      it 'should delete all user answers for the participation quiz' do
+        lambda {
+          @user.unparticipate!(@quiz)
+        }.should change(UserAnswer, :count).by(-1)
+      end
     end
   end
   
