@@ -6,11 +6,11 @@
   - form_for @user, :url => password_reset_path, :method => :put do |f|
   
     %p= @user.name + ', please enter your new password below.'
-    %p
+    .field
       = f.label :password
       = f.password_field :password, :size => 50
       = f.error_message_on :password, :prepend_text => 'Password '
-    %p
+    .field
       = f.label :password_confirmation, 'Password again'
       = f.password_field :password_confirmation, :size => 50
       = f.error_message_on :password_confirmation, :prepend_text => 'Password confirmation '
