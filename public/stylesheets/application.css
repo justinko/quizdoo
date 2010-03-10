@@ -308,7 +308,8 @@ ul#answers_list {
   border-style: solid;
   border-width: 2px;
   border-color: #cc0000;
-  background: #fff; }
+  background: #fff;
+  margin-bottom: 15px; }
   #content #left .errorExplanation h2 {
     background: #cc0000;
     color: #fff;

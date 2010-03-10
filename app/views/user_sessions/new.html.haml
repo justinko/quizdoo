@@ -7,9 +7,11 @@
     .field
       = f.label :username, 'Username or email'
       = f.text_field :username, :size => 50
+      = f.error_message_on :username, :prepend_text => 'Username or email '
     .field
       = f.label :password
       = f.password_field :password, :size => 50
+      = f.error_message_on :password, :prepend_text => 'Password '
     .field
       .checkbox
         = f.check_box :remember_me
