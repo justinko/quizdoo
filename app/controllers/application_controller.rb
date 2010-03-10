@@ -3,6 +3,9 @@
 
 class ApplicationController < ActionController::Base
   include ExceptionNotifiable
+  
+  THE_DOMAIN = 'quizdoo.com'
+  
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
@@ -19,6 +22,8 @@ class ApplicationController < ActionController::Base
                 :current_user,
                 :owner?
   
+  before_filter :ensure_domain
+
   private
   
   def current_user_session
@@ -81,5 +86,11 @@ class ApplicationController < ActionController::Base
   
   def access_denied!(message = 'You do not have access to this page')
     raise AccessDenied, message
+  end
+  
+  def ensure_domain
+    if request.env['HTTP_HOST'] != THE_DOMAIN
+      redirect_to THE_DOMAIN
+    end
   end
 end
