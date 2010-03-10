@@ -29,11 +29,11 @@ describe Question do
   should_validate_uniqueness_of :body, :scope => :quiz_id
   
   describe '#has_correct_answer?' do
-    it { questions(:one).should have_correct_answer }
+    it { questions(:one).has_correct_answer?.should be_true }
     
     describe 'with all answers deleted' do
       before { Answer.delete_all }
-      it { questions(:one).should_not have_correct_answer }
+      it { questions(:one).has_correct_answer?.should be_false }
     end
   end
   

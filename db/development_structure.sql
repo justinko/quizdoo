@@ -34,7 +34,6 @@ CREATE TABLE answers (
 --
 
 CREATE SEQUENCE answers_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -66,7 +65,6 @@ CREATE TABLE categories (
 --
 
 CREATE SEQUENCE categories_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -100,7 +98,6 @@ CREATE TABLE participations (
 --
 
 CREATE SEQUENCE participations_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -134,7 +131,6 @@ CREATE TABLE questions (
 --
 
 CREATE SEQUENCE questions_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -169,7 +165,6 @@ CREATE TABLE quizzes (
 --
 
 CREATE SEQUENCE quizzes_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -257,7 +252,6 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE

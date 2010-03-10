@@ -64,7 +64,8 @@ class User < ActiveRecord::Base
   
   def unparticipate!(quiz)
     find_participation(quiz).destroy
-    UserAnswer.destroy_all(:user_id => id, :question_id => quiz.question_ids)
+    UserAnswer.destroy_all :user_id => id,
+                           :question_id => quiz.question_ids
   end
   
   def participating?(quiz)

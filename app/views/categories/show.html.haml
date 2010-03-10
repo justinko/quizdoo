@@ -1,0 +1,16 @@
+- @page_title = "Category: #{@category.name}"
+
+%h2= @page_title
+
+%ul
+  - @category.quizzes.each do |quiz|
+    %li= link_to h(quiz.title), quiz_path(quiz)
+    
+- content_for :right do
+  %h3 Categories
+  
+  %ul
+    - @categories.each do |category|
+      %li
+        = link_to category.name, category_path(category)
+        = '(' + category.quizzes_count.to_s + ')'
