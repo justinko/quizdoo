@@ -45,7 +45,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
-  map.resources :answers, :except => [:new, :create]
+  map.resources :answers, :except => [:index, :new, :create]
   
   map.resources :user_answers, :only => :destroy
   

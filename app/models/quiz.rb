@@ -13,6 +13,11 @@
 #
 
 class Quiz < ActiveRecord::Base
+  
+  attr_accessible :category_id,
+                  :title,
+                  :description
+  
   belongs_to :category, :counter_cache => true
   belongs_to :user
   

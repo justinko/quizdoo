@@ -16,6 +16,11 @@ require 'spec_helper'
 describe UserAnswer do
   fixtures :user_answers
   
+  should_not_allow_mass_assignment_of :user_id,
+                                      :question_id,
+                                      :answer_id,
+                                      :correct
+  
   should_belong_to :user,
                    :question,
                    :answer
@@ -37,9 +42,10 @@ describe UserAnswer do
     before do
       UserAnswer.delete_all
       
-      @user_answer = UserAnswer.new :user => users(:justin),
-                                    :question => questions(:one),
-                                    :answer => answers(:one)
+      @user_answer = UserAnswer.new 
+      @user_answer.user = users(:justin)
+      @user_answer.question = questions(:one)
+      @user_answer.answer = answers(:one)
     end
     
     it 'should create a new record' do

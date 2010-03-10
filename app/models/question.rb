@@ -12,6 +12,9 @@
 #
 
 class Question < ActiveRecord::Base
+  
+  attr_accessible :body
+  
   belongs_to :quiz, :counter_cache => true
   
   has_many :answers, :order => 'answers.position ASC',

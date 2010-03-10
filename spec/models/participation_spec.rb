@@ -16,6 +16,11 @@ require 'spec_helper'
 describe Participation do
   fixtures :participations
   
+  should_not_allow_mass_assignment_of :user_id,
+                                      :quiz_id,
+                                      :correct_count,
+                                      :incorrect_count
+  
   should_belong_to :user, :quiz
   
   should_validate_presence_of :user_id,

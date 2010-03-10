@@ -12,6 +12,9 @@
 #
 
 class Participation < ActiveRecord::Base
+  
+  attr_accessible
+  
   belongs_to :user
   belongs_to :quiz
   

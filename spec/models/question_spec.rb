@@ -16,6 +16,8 @@ require 'spec_helper'
 describe Question do
   fixtures :questions
   
+  should_not_allow_mass_assignment_of :quiz_id
+  
   should_belong_to :quiz
   
   should_have_many :answers,
@@ -44,8 +46,12 @@ describe Question do
     
     before do
       5.times do |i|
-        Question.create :quiz => quizzes(:rails),
-                        :body => 'blah' + i.to_s
+        
+        q      = Question.new
+        q.quiz = quizzes(:rails)
+        q.body = 'blah' + i.to_s
+        q.save
+        
       end
       
       @question = Question.all.at(3)

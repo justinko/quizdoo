@@ -16,6 +16,8 @@ require 'spec_helper'
 describe Answer do
   fixtures :answers
   
+  should_not_allow_mass_assignment_of :question_id
+  
   should_belong_to :question
   
   should_have_many :user_answers

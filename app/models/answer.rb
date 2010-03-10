@@ -12,6 +12,10 @@
 #
 
 class Answer < ActiveRecord::Base
+  
+  attr_accessible :body,
+                  :correct
+                  
   belongs_to :question, :counter_cache => true
   
   has_many :user_answers, :dependent => :destroy

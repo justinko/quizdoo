@@ -17,6 +17,8 @@ require 'spec_helper'
 describe Quiz do
   fixtures :quizzes
   
+  should_not_allow_mass_assignment_of :user_id
+  
   should_belong_to :category,
                    :user
   
