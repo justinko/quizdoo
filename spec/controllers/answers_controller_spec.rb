@@ -54,3 +54,14 @@ describe AnswersController, 'User logged in' do
     }
   end
 end
+
+describe AnswersController, 'User not logged in' do
+  integrate_views
+  fixtures :answers
+  
+  it 'should redirect to home' do
+    get :edit, :id => answers(:one).id
+    response.should be_redirect
+    response.should redirect_to(login_url)
+  end
+end

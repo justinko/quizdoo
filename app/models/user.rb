@@ -57,7 +57,9 @@ class User < ActiveRecord::Base
   end
   
   def participate!(quiz)
-    participations.create!(:quiz => quiz)
+    participation = participations.build
+    participation.quiz = quiz
+    participation.save!
   end
   
   def unparticipate!(quiz)
