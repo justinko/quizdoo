@@ -1,0 +1,1 @@
+BLACKLIST_USERNAMES = %w(quizzes questions answers quizdoo categories help show edit update destroy new create www www2 blog weblog support)

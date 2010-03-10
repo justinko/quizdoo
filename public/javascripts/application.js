@@ -97,7 +97,7 @@ jQuery(function($) {
   });
   
   $('form#new_question').find('textarea#question_body').focus();
-  $('form#new_user_session').find('input#user_session_email').focus();
+  $('form#new_user_session').find('input#user_session_username').focus();
   $('form#new_password_reset').find('input#email').focus();
 });
 

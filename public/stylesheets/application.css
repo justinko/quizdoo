@@ -31,6 +31,9 @@ label {
 .warning {
   color: #cc0000; }
 
+.hint {
+  color: #888; }
+
 a#logo img {
   border: 0; }
 
@@ -50,7 +53,8 @@ a#logo img {
         display: block;
         font-size: 16px; }
 
-body#users #nav a.account,
+body#users.edit #nav a.account,
+body#users.update #nav a.account,
 body#users #nav a.signup,
 body#user_sessions #nav a.login,
 body#quizzes #nav a.quizzes,
@@ -121,8 +125,7 @@ hr#split {
   color: #aaa; }
 
 .submit {
-  float: left;
-  width: 100%; }
+  float: left; }
   .submit span {
     color: #888; }
 
@@ -153,12 +156,15 @@ hr#split {
       font-size: 14px;
       padding: 2px; }
     .form form .formatting {
-      margin-top: 12px;
       float: right;
       margin-right: 50px; }
     .form form .submit {
-      margin-top: 12px;
       margin-bottom: 15px; }
+
+.field {
+  margin-bottom: 15px; }
+  .field .hint {
+    margin-top: 2px; }
 
 .new_ajax_form {
   background: #f5f5f5;

@@ -58,12 +58,16 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :password_resets, :except => :destroy
   
   map.resource :user_session
-    
+  
+  map.account 'account', :controller => 'users', :action => 'edit'
   map.login 'login', :controller => 'user_sessions', :action => 'new'
   map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'
   map.signup 'signup', :controller => 'users', :action => 'new'
   
   map.root :controller => 'dashboards', :action => 'show'
+  
+  map.connect ':username', :controller => 'users',
+                           :action => 'show'
   
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should

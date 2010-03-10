@@ -40,9 +40,21 @@ class User < ActiveRecord::Base
   has_many :answers, :class_name => 'UserAnswer',
                      :dependent => :destroy
   
-  validates_presence_of :name
+  validates_presence_of :name,
+                        :username
   
-  validates_uniqueness_of :name, :case_sensitive => false
+  validates_uniqueness_of :name, 
+                          :username, :case_sensitive => false
+  
+  validates_format_of :username, :with => /\A\w+\z/i,
+                                 :message => 'only letters, numbers, and underscores please'
+                                 
+  validates_exclusion_of :username, :in => BLACKLIST_USERNAMES,
+                                    :message => 'is not allowed'
+  
+  def self.find_by_username_or_email(login)
+    find_by_username(login) || find_by_email(login)
+  end
   
   def participate!(quiz)
     participations.create!(:quiz => quiz)
@@ -80,7 +92,7 @@ class User < ActiveRecord::Base
   end
   
   def can_edit_quiz?(quiz)
-    quizzes.include?(quiz)
+    quiz.user_id == id
   end
   
   def deliver_password_reset_instructions!

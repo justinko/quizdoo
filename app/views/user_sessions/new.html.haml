@@ -4,14 +4,14 @@
 
 .form
   - form_for @user_session, :url => user_session_path do |f|
-    %p
-      = f.label :email
-      = f.text_field :email, :size => 50
-    %p
+    .field
+      = f.label :username, 'Username or email'
+      = f.text_field :username, :size => 50
+    .field
       = f.label :password
       = f.password_field :password, :size => 50
-    .checkbox
-      %p
+    .field
+      .checkbox
         = f.check_box :remember_me
         = f.label :remember_me
     .submit

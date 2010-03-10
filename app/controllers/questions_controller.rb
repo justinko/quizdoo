@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
   before_filter :find_quiz
   before_filter :find_question, :except => [:new, :create]
   before_filter :authorize_quiz, :except => :show
-  before_filter :authorize_question, :except => :show
+  before_filter :authorize_question, :except => [:show, :new, :create]
   
   def new
     @question = Question.new

@@ -7,11 +7,13 @@
 #   Major.create(:name => 'Daley', :city => cities.first)
 
 me = User.create :name => 'Justin Ko',
+                 :username => 'test',
                  :email => 'test@test.com',
                  :password => 'test',
                  :password_confirmation => 'test'
 
 dhh = User.create :name => 'David Hanson',
+                  :username => 'dhh',
                   :email => 'dhh@test.com',
                   :password => 'test',
                   :password_confirmation => 'test'            

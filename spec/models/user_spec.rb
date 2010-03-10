@@ -32,9 +32,22 @@ describe User do
                    :participating_quizzes,
                    :answers
   
-  should_validate_presence_of :name
+  should_validate_presence_of :name,
+                              :username
   
-  should_validate_uniqueness_of :name
+  should_validate_uniqueness_of :name,
+                                :username
+                                
+  should_allow_values_for :username,
+                          'blah', 'test_user', '123_56',
+                          :message => 'only letters, numbers, and underscores please'
+                          
+  should_not_allow_values_for :username,
+                              'blah.', 'test_user,', '123_56+',
+                              :message => 'only letters, numbers, and underscores please'
+                              
+  should_validate_exclusion_of :username, :in => BLACKLIST_USERNAMES,
+                                          :message => 'is not allowed'                     
   
   describe 'participation' do
     before do
@@ -152,7 +165,7 @@ describe User do
         @question.update_attribute(:quiz_id, nil)
       end
       
-      it { users(:justin).can_edit_quiz?(@question).should be_false }
+      it { users(:justin).can_edit_question?(@question).should be_false }
     end
   end
   
