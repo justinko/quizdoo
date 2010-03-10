@@ -4,7 +4,7 @@
 class ApplicationController < ActionController::Base
   include ExceptionNotifiable
   
-  THE_DOMAIN = 'quizdoo.com'
+  THE_DOMAIN = 'http://quizdoo.com'
   
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
@@ -89,7 +89,7 @@ class ApplicationController < ActionController::Base
   end
   
   def ensure_domain
-    if request.env['HTTP_HOST'] != THE_DOMAIN
+    if request.subdomains.first.eql?('www')
       redirect_to THE_DOMAIN
     end
   end
