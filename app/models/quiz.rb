@@ -51,10 +51,12 @@ class Quiz < ActiveRecord::Base
   named_scope :recently_added, :limit => 10,
                                :order => 'created_at DESC'
   
-  named_scope :recently_updated, :limit => 10,
+  named_scope :recently_updated, :conditions => 'questions_updated_at IS NOT NULL',
+                                 :limit => 10,
                                  :order => 'questions_updated_at DESC'
                                  
-  named_scope :recently_viewed, :limit => 15,
+  named_scope :recently_viewed, :conditions => 'last_viewed IS NOT NULL',
+                                :limit => 15,
                                 :order => 'last_viewed DESC'
   
   def percentage_answered_correctly

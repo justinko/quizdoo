@@ -41,10 +41,12 @@ describe Quiz do
   should_have_scope :recently_added, :limit => 10,
                                      :order => 'created_at DESC'
                                      
-  should_have_scope :recently_updated, :limit => 10,
+  should_have_scope :recently_updated, :conditions => 'questions_updated_at IS NOT NULL',
+                                       :limit => 10,
                                        :order => 'questions_updated_at DESC'
                                        
-  should_have_scope :recently_viewed, :limit => 15,
+  should_have_scope :recently_viewed, :conditions => 'last_viewed IS NOT NULL',
+                                      :limit => 15,
                                       :order => 'last_viewed DESC'
                                      
   describe 'custom validations' do    
