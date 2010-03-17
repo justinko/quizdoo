@@ -1,12 +1,13 @@
-- @page_title = "Question ##{@question.position}"
+- @page_title = "Question ##{@question.number}"
 
 - if current_user
-  - if owner?
-    #mid_nav.top= link_to 'Edit Question', edit_quiz_question_path(@quiz, @question), :class => 'edit'
+  - if owner? or suggester?
+    #mid_nav= link_to 'Edit Question', edit_quiz_question_path(@quiz, @question), :class => 'edit'
   - else
     = correct_or_incorrect
 
 = quiz_link
+= meta_question_tags
 
 %h2= @page_title
 
@@ -15,14 +16,14 @@
 .heading
   %h3
     Answers
-    - if owner? and @answers.any? and not @question.has_correct_answer?
+    - if (owner? || suggester?) and @answers.any? and not @question.has_correct_answer?
       %span.warning &ndash; This question lacks a correct answer
-  = link_to 'Add Answer', '#', :class => 'add ajax' if owner?
+  = link_to 'Add Answer', '#', :class => 'add ajax' if owner? or suggester?
 
 
 - if current_user
 
-  - if owner?
+  - if owner? or suggester?
     .new_ajax_form
       %h4 Add Answer
       - form_for @answer, :url => quiz_question_answers_path(@quiz, @question) do |f|
@@ -77,11 +78,38 @@
   
 
 - content_for :right do
-  .next_and_previous
-    .prev= prev_question
-    .next= next_question
+  - if suggester?
+    %h3 Your Suggested Questions
+    - if @suggested_questions.any?
+      .show_table
+        %table
+          %thead
+            %tr
+              %th Number
+              %th Tags
+          %tbody
+            - @suggested_questions.each do |question|
+              %tr{:class => cycle('even', ['even', 'odd'])}
+                %td= show_number(question)
+                %td.light= linked_tags(question.tags)
+    - else
+      = no_items('No suggested questions found')
+  - else
+    .next_and_previous
+      .prev= prev_question
+      .next= next_question
+      
+    - if owner? and @question.suggester? and not @question.approved?
+      .box
+        .info.yellow
+          This question was suggested by
+          = user_link(@question.suggester)
+          on
+          = @question.created_at.to_s(:detailed)
+          .button= link_to 'Approve It', approve_question_path(@question), :method => :put
   
-  - if current_user and not owner?
+  
+  - if participant?
     .answered_count
       = total_answered
       answered out of

@@ -29,11 +29,48 @@ describe UserAnswer do
                               :question_id,
                               :answer_id
                               
-  should_validate_uniqueness_of :user_id, :scope => [:question_id, :answer_id],
+  should_validate_uniqueness_of :user_id, :scope => :question_id,
                                           :message => 'has already answered this question'
+  
+  should_have_scope :correct, :conditions => {:correct => true}
+  
+  describe 'custom validations' do
+    fixtures :users, :questions, :answers
+    
+    describe 'record' do
+      it 'should be invalid if user is quiz owner' do
+        make_record
+        error_str = 'You cannot answer a question in your own quiz'
+        @record.errors.full_messages.should include(error_str)
+      end
+      
+      it 'should be invalid if user is not participating in quiz' do
+        UserAnswer.delete_all
+        make_record
+        error_str = 'You must be participating in this quiz to answer questions'
+        @record.errors.full_messages.should include(error_str)
+      end
+      
+      it 'should be invalid if question is not approved' do
+        questions(:ruby).update_attribute(:approved, false)
+        make_record
+        error_str = 'Question must be approved'
+        @record.errors.full_messages.should include(error_str)
+      end
+      
+      def make_record
+        @record = UserAnswer.new
+        @record.user = users(:justin)
+        @record.question = questions(:ruby)
+        @record.answer = answers(:ruby_correct)
+        @record.save
+        @record
+      end
+    end
+  end
                                           
   describe '#correct?' do
-    it { user_answers(:one).should be_correct }
+    it { user_answers(:rails).should be_correct }
   end
   
   describe 'updating participant correct counts' do
@@ -44,8 +81,8 @@ describe UserAnswer do
       
       @user_answer = UserAnswer.new 
       @user_answer.user = users(:justin)
-      @user_answer.question = questions(:one)
-      @user_answer.answer = answers(:one)
+      @user_answer.question = questions(:rails)
+      @user_answer.answer = answers(:rails_correct)
     end
     
     it 'should create a new record' do
@@ -55,13 +92,13 @@ describe UserAnswer do
     end
     
     it 'should increment correct_count for participation' do
-      Participation.any_instance.expects(:increment!).with(:correct_count).once
+      mock.instance_of(Participation).increment!(:correct_count).once
       @user_answer.save!
     end
     
     it 'should increment incorrect_count for participation' do
-      @user_answer.answer = answers(:two)
-      Participation.any_instance.expects(:increment!).with(:incorrect_count).once
+      mock.instance_of(Participation).increment!(:incorrect_count).once
+      @user_answer.answer = answers(:rails_incorrect)
       @user_answer.save!
     end
   end

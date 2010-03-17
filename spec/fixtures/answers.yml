@@ -11,12 +11,19 @@
 #  updated_at  :datetime
 #
 
-one:
-  question: one
+rails_correct:
+  question: rails
   body: This is the body.
   correct: true
-  
-two:
-  question: one
+rails_incorrect:
+  question: rails
+  body: This is the body too.
+  correct: false
+ruby_correct:
+  question: ruby
+  body: This is the body.
+  correct: true
+ruby_incorrect:
+  question: ruby
   body: This is the body too.
   correct: false

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100310074829) do
+ActiveRecord::Schema.define(:version => 20100317044924) do
 
   create_table "answers", :force => true do |t|
     t.integer  "question_id"
@@ -49,22 +49,51 @@ ActiveRecord::Schema.define(:version => 20100310074829) do
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "number"
+    t.integer  "suggester_id"
+    t.boolean  "approved",      :default => false
   end
 
+  add_index "questions", ["approved"], :name => "index_questions_on_approved"
   add_index "questions", ["quiz_id"], :name => "index_questions_on_quiz_id"
+  add_index "questions", ["suggester_id"], :name => "index_questions_on_suggester_id"
 
   create_table "quizzes", :force => true do |t|
     t.integer  "category_id"
     t.integer  "user_id"
     t.string   "title"
     t.text     "description"
-    t.integer  "questions_count", :default => 0
+    t.integer  "questions_count",      :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "permalink"
+    t.integer  "participations_count", :default => 0
+    t.datetime "questions_updated_at"
+    t.datetime "last_viewed"
   end
 
   add_index "quizzes", ["category_id"], :name => "index_quizzes_on_category_id"
+  add_index "quizzes", ["last_viewed"], :name => "index_quizzes_on_last_viewed"
+  add_index "quizzes", ["permalink"], :name => "index_quizzes_on_permalink"
+  add_index "quizzes", ["questions_updated_at"], :name => "index_quizzes_on_questions_updated_at"
   add_index "quizzes", ["user_id"], :name => "index_quizzes_on_user_id"
+
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "taggable_type"
+    t.string   "context"
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
 
   create_table "user_answers", :force => true do |t|
     t.integer  "user_id"

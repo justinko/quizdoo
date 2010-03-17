@@ -35,15 +35,21 @@ ActionController::Routing::Routes.draw do |map|
 
   # See how all your routes lay out with "rake routes"
   
+  map.resources :pages, :only => :show
+  
   map.resource :dashboard, :only => :show
   
-  map.resources :quizzes, :member => { :participate => :post,
-                                       :unparticipate => :delete } do |quiz|
-    quiz.resources :questions do |question|
+  map.resources :quizzes, :member => { :participate => :post } do |quiz|
+    quiz.resources :tags, :only => [:index, :show]
+    quiz.resources :questions, :new => { :suggest => :get } do |question|
       question.resources :answers
       question.resources :user_answers, :only => :create
     end
   end
+  
+  map.resources :questions, :only => :none, :member => {:approve => :put}
+  
+  map.resources :participations, :only => :destroy
   
   map.resources :answers, :except => [:index, :new, :create]
   
@@ -53,12 +59,12 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :users, :only => [:new, :create]
   
-  map.resource :user, :only => [:edit, :update]
+  map.resource :user, :only => [:edit, :update, :destroy]
   
   map.resources :password_resets, :except => :destroy
   
   map.resource :user_session
-  
+    
   map.account 'account', :controller => 'users', :action => 'edit'
   map.login 'login', :controller => 'user_sessions', :action => 'new'
   map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'
@@ -66,8 +72,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.root :controller => 'dashboards', :action => 'show'
   
-  map.connect ':username', :controller => 'users',
-                           :action => 'show'
+  map.username ':username', :controller => 'users',
+                            :action => 'show'
   
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should

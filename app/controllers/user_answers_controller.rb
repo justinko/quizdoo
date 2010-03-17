@@ -5,18 +5,21 @@ class UserAnswersController < ApplicationController
   
   def create
     current_user.answer_question!(@question, params)
-    flash[:success] = 'Answer saved'
+  rescue ActiveRecord::RecordInvalid => errors
+    flash[:failure] = errors.to_s
   rescue ActiveRecord::RecordNotFound
-    flash[:failure] = 'Question or answer could not be found'
+    flash[:failure] = 'Quiz, Question or Answer could not be found'
   ensure
     redirect_to quiz_question_url(@quiz, @question)
   end
   
   def destroy
-    current_user.answers.find(params[:id]).destroy
+    user_answer = current_user.answers.find(params[:id])
+    user_answer.destroy
+    redirect_to quiz_question_url user_answer.question.quiz,
+                                  user_answer.question
   rescue ActiveRecord::RecordNotFound
-    flash[:failure] = 'Could not reset this question'
-  ensure
-    redirect_to :back
+    flash[:failure] = 'Answer could not be found'
+    redirect_to root_url
   end
 end

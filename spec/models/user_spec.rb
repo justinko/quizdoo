@@ -29,6 +29,8 @@ describe User do
   
   should_have_many :quizzes,
                    :questions,
+                   :suggested_questions,
+                   :suggested_answers,
                    :participations,
                    :participating_quizzes,
                    :answers
@@ -50,41 +52,68 @@ describe User do
   should_validate_exclusion_of :username, :in => BLACKLIST_USERNAMES,
                                           :message => 'is not allowed'                     
   
-  describe 'participation' do
+  before { @user = users(:justin) }
+  
+  describe '#find_by_username_or_email' do
+    it { User.find_by_username_or_email(@user.username).should eql(@user) }
+    it { User.find_by_username_or_email(@user.email).should eql(@user) }
+    it { User.find_by_username_or_email('blah').should be_nil }
+  end
+  
+  describe '#participating_quizzes_for_dashboard' do
     before do
-      Participation.delete_all
-      
-      @user = users(:justin)
-      @quiz = quizzes(:rails)
+      @records = @user.participating_quizzes_for_dashboard
     end
     
-    it 'should create a new quiz participation record' do
+    it { @records.should have(1).item }
+    it { @records.first.user_answer_count.to_i.should eql(1) }
+    it { @records.first.id.should eql(quizzes(:rails).id) }
+    it { @records.first.title.to_s.should eql(quizzes(:rails).title.to_s) }
+    it { @records.first.correct_count.to_i.should eql(1) }
+    it { @records.first.incorrect_count.to_i.should eql(0) }
+  end
+  
+  describe '#suggested_questions_for_quiz' do
+    before do
+      @quiz = quizzes(:rails)
+      @user = @user
+      
+      @q = Question.new
+      @q.quiz = @quiz
+      @q.suggester = @user
+      @q.body = 'blah test'
+      @q.save!
+    end
+    
+    it 'should include the newly created question' do
+      @user.suggested_questions_for_quiz(@quiz).should include(@q)
+    end
+  end
+  
+  describe '#participate!' do
+    before do
+      Participation.delete_all
+      @user = @user
+    end
+    
+    it 'should create a participation record' do
       lambda {
-        @user.participate!(@quiz)
+        @user.participate!(quizzes(:rails))
       }.should change(Participation, :count).by(1)
     end
     
-    it { @user.participating?(@quiz).should be_false }
-    
-    describe 'with created participation record' do
-      before do
-        @user.participate!(@quiz)
-      end
-      
-      it { @user.participating?(@quiz).should be_true }
-      
-      it 'should delete the record' do
-        lambda {
-          @user.unparticipate!(@quiz)
-        }.should change(Participation, :count).by(-1)
-      end
-      
-      it 'should delete all user answers for the participation quiz' do
-        lambda {
-          @user.unparticipate!(@quiz)
-        }.should change(UserAnswer, :count).by(-1)
-      end
+    it 'should not create a participation record if user is quiz owner' do
+      lambda {
+        @user.participate!(quizzes(:ruby))
+      }.should raise_exception(ActiveRecord::RecordInvalid)
     end
+  end
+  
+  describe '#participating?' do
+    before { @user = @user }
+    
+    it { @user.participating?(quizzes(:rails)).should be_true }
+    it { @user.participating?(quizzes(:ruby)).should be_false }
   end
   
   describe '#answer_question!' do
@@ -92,9 +121,9 @@ describe User do
     
     before do
       UserAnswer.delete_all
-      @user = users(:justin)
-      @question = questions(:one)
-      @answer = answers(:one)
+      @user = @user
+      @question = questions(:rails)
+      @answer = answers(:rails_correct)
       @params = { :user_answer => { :answer_id => @answer.id }}
     end
     
@@ -110,6 +139,12 @@ describe User do
       
       it { @user_answer.question.should eql(@question) }
       it { @user_answer.answer.should eql(@answer) }
+      
+      it 'should raise exception if attempt to create again' do
+        lambda {
+          create_user_answer
+        }.should raise_exception(ActiveRecord::RecordInvalid)
+      end
     end
     
     def create_user_answer
@@ -119,7 +154,7 @@ describe User do
   
   describe '#all_answered?' do
     before do
-      @user = users(:justin)
+      @user = @user
       @quiz = quizzes(:rails)
     end
     
@@ -135,59 +170,101 @@ describe User do
   end
   
   describe '#total_answered' do
-    it { users(:justin).total_answered(quizzes(:rails)).should eql(1) }
+    it { @user.total_answered(quizzes(:rails)).should eql(1) }
   end
   
   describe '#can_edit_answer?' do
     fixtures :answers
+        
+    it "should be true if user owns the answer's quiz" do
+      answer = answers(:ruby_correct)
+      @user.can_edit_answer?(answer).should be_true
+    end
     
-    before { @answer = answers(:one) }
+    it "should be false if user does not own the answer's quiz" do
+      answer = answers(:rails_correct)
+      @user.can_edit_answer?(answer).should be_false
+    end
     
-    it { users(:justin).can_edit_answer?(@answer).should be_true }
-    
-    describe 'with answer that has no question' do
+    describe 'with question_ids empty' do
       before do
-        @answer.update_attribute(:question_id, nil)
+        mock(@user).question_ids { [] }
       end
       
-      it { users(:justin).can_edit_answer?(@answer).should be_false }
+      it 'should return false if zero suggested_answers' do
+        @user.can_edit_answer?(answers(:rails_correct)).should be_false
+      end
+      
+      describe 'with suggested answers to include given answer' do
+        fixtures :questions
+        
+        before do
+          q = questions(:rails)
+          q.suggester = @user
+          q.save!
+        end
+        
+        it { @user.can_edit_answer?(answers(:rails_correct)).should be_true }
+      end
     end
   end
   
   describe '#can_edit_question?' do
     fixtures :questions
     
-    before { @question = questions(:one) }
-    
-    it { users(:justin).can_edit_question?(@question).should be_true }
-    
-    describe 'with question that has no quiz' do
+    describe 'with suggester as nil' do
       before do
-        @question.update_attribute(:quiz_id, nil)
+        mock.instance_of(Question).suggester { nil }
       end
       
-      it { users(:justin).can_edit_question?(@question).should be_false }
+      it "should be true if user owns the question's quiz" do
+        question = questions(:ruby)
+        @user.can_edit_question?(question).should be_true
+      end
+    
+      it "should be false if user does not own the question's quiz" do
+        question = questions(:rails)
+        @user.can_edit_question?(question).should be_false
+      end
+    end
+    
+    describe 'with suggester set to user' do
+      before do
+        mock.instance_of(Question).suggester { @user }
+      end
+      
+      it { @user.can_edit_question?(questions(:ruby)).should be_true }
     end
   end
   
   describe '#can_edit_quiz?' do
-    before { @quiz = quizzes(:rails) }
+    before { @quiz = quizzes(:ruby) }
     
-    it { users(:justin).can_edit_quiz?(@quiz).should be_true }
+    it { @user.can_edit_quiz?(@quiz).should be_true }
     
-    describe 'with quiz that has no user' do
+    describe 'with quiz suggesters set to empty array' do
       before do
-        @quiz.update_attribute(:user_id, nil)
+        mock(@quiz).user_id { nil }
+        mock(@quiz).suggesters { [] }
       end
       
-      it { users(:justin).can_edit_quiz?(@quiz).should be_false }
+      it { @user.can_edit_quiz?(@quiz).should be_false }
+    end
+    
+    describe 'with quiz suggesters set to array with user' do
+      before do
+        mock(@quiz).user_id { nil }
+        mock(@quiz).suggesters { [@user] }
+      end
+      
+      it { @user.can_edit_quiz?(@quiz).should be_true }
     end
   end
   
   describe '#deliver_password_reset_instructions!' do
     it 'should send an email to the user' do
-      user = users(:justin)
-      Emailer.expects(:deliver_password_reset_instructions).with(user).once
+      user = @user
+      mock(Emailer).deliver_password_reset_instructions(user).once
       user.deliver_password_reset_instructions!
     end
   end
@@ -196,9 +273,9 @@ describe User do
     fixtures :participations
     
     it 'should find the correct participation record' do
-      participation = participations(:one)
+      participation = participations(:rails)
       quiz = quizzes(:rails)
-      users(:justin).find_participation(quiz).should eql(participation)
+      @user.find_participation(quiz).should eql(participation)
     end
   end
 end

@@ -1,0 +1,10 @@
+#questions_list
+  %table
+    %tbody
+      - questions.each do |question|
+        %tr
+          %td.id
+            .show_id= show_number(question)
+          %td.body
+            .box
+              .show_body= truncate_html(question.body.to_html, 120)

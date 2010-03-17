@@ -11,8 +11,8 @@
 #  updated_at  :datetime
 #
 
-one:
+rails:
   user: justin
-  question: one
-  answer: one
+  question: rails
+  answer: rails_correct
   correct: true

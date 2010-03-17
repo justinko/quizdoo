@@ -2,8 +2,11 @@ class DashboardsController < ApplicationController
   before_filter :render_home_page
   
   def show
-    @participating_quizzes = current_user.participating_quizzes
+    @participating_quizzes = current_user.participating_quizzes_for_dashboard
     @your_quizzes = current_user.quizzes
+    @questions_awaiting_approval = current_user.questions.awaiting_approval.all(
+      :include => [:quiz, :suggester]
+    )
   end
   
   private

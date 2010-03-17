@@ -23,7 +23,18 @@
 #
 
 justin:
+  name: Justin Ko
+  username: justin
   email: justin@whatever.com
+  password_salt: <%= salt = Authlogic::Random.hex_token %>
+  crypted_password: <%= Authlogic::CryptoProviders::BCrypt.encrypt("password" + salt) %>
+  persistence_token: <%= Authlogic::Random.hex_token %>
+  single_access_token: <%= Authlogic::Random.friendly_token %>
+  perishable_token: <%= Authlogic::Random.friendly_token %>
+dhh:
+  name: David Hanson
+  username: dhh
+  email: dhh@whatever.com
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::BCrypt.encrypt("password" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>

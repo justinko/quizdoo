@@ -44,4 +44,9 @@ module QuestionsHelper
   def all_questions_answered?
     @total_answered == @total_questions
   end
+  
+  def show_number(question)
+    quiz = @quiz || question.quiz
+    link_to '#' + question.number.to_s, quiz_question_path(quiz, question)
+  end
 end

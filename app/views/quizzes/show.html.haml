@@ -6,8 +6,8 @@
     - if owner?
       = link_to 'Edit Quiz', edit_quiz_path(@quiz), :class => 'edit'
     - else
-      - if current_user.participating?(@quiz)
-        = link_to 'Un-participate', unparticipate_quiz_path(@quiz), :method => :delete
+      - if @participation
+        = link_to 'Un-participate', participation_path(@participation), :method => :delete, :confirm => 'Are you sure you want to un-participate from this quiz?'
       - else
         = link_to 'Participate', participate_quiz_path(@quiz), :method => :post
   
@@ -15,15 +15,30 @@
 %h2= @page_title
 
 - unless @quiz.description.blank?
-  %p=h @quiz.description
+  %p= auto_link h(@quiz.description)
+
+- if @tags.any?
+  %p.light
+    Question tags:
+    = linked_tags
 
 .heading
   %h3= 'Questions (' + @quiz.questions_count.to_s + ')'
-  = link_to 'Add Question', new_quiz_question_path(@quiz), :class => 'add' if owner?
+  - if owner?
+    = link_to 'Add Question', new_quiz_question_path(@quiz), :class => 'add'
+  - elsif current_user
+    = link_to 'Suggest Question', suggest_new_quiz_question_path(@quiz), :class => 'add'
 
-%ul#questions_list
-  - @quiz.questions.each do |question|
-    %li
-      = '#' + question.position.to_s
-      &ndash;
-      = link_to truncate(question.body.to_s, :length => 60), quiz_question_path(@quiz, question)
+= render :partial => 'questions/list', :locals => {:questions => @questions}
+              
+- content_for :right do
+  %h3 Participating Users
+  - if @participating_users.any?
+    .users_list
+      %table
+        - @participating_users.each do |user|
+          %tr
+            %td= user_link(user)
+  - else
+    = no_items('No users are participating in this quiz.')
+    

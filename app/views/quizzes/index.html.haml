@@ -1,21 +1,22 @@
 - @page_title = 'Quizzes'
 
+#mid_nav= link_to 'Create Quiz', new_quiz_path
+
 %h2= @page_title
 
-= link_to 'Create Quiz', new_quiz_path
-
-#quizzes_box
-  .box
-    %h3 Recently Added
-    %ul
-      - @recently_added.each do |quiz|
-        %li= link_to quiz.title, quiz_path(quiz)
-  
-
-%h3 Categories
-
-%ul
-  - @categories.each do |category|
-    %li
-      = link_to category.name, category_path(category)
-      = '(' + category.quizzes_count.to_s + ')'
+.show_table
+  %table
+    %thead
+      %tr
+        %th Title
+        %th.center Questions
+        %th Last Viewed
+    %tbody
+      - @quizzes.each do |quiz|
+        %tr{:class => cycle('even', ['even', 'odd'])}
+          %td= link_to truncate(h(quiz.title), :length => 50), quiz_path(quiz)
+          %td.center= quiz.questions.count
+          %td= time_ago_in_words(quiz.last_viewed) + ' ago'
+          
+          
+= render :partial => 'categories/list'

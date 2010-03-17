@@ -17,7 +17,7 @@ jQuery(function($) {
   
   // from http://codetunes.com/2008/12/08/rails-ajax-and-jquery/
   
-  $('a.get').live('click', function() {
+  $('a.ajax.get').live('click', function() {
     var link = $(this);
     $.get(link.attr('href'), function(data) {
       if (link.attr('ajaxtarget'))
@@ -27,7 +27,7 @@ jQuery(function($) {
     return false;
   }).attr("rel", "nofollow");
   
-  $('a.delete').live('click', function() {
+  $('a.ajax.delete').live('click', function() {
     var link = $(this);
     $.ajax({
       type: 'POST',
@@ -93,6 +93,27 @@ jQuery(function($) {
   
   $('.new_ajax_form').find('a.cancel').click(function() {
     $(this).parents('.new_ajax_form').hide();
+    return false;
+  });
+  
+  var question_box = $('#questions_list').find('.box');
+  
+  question_box.hover(
+    function() {
+      $(this).addClass('over');
+    },
+    function() {
+      $(this).removeClass('over');
+    }
+  );
+  
+  question_box.click(function() {
+    question_url = question_box.parent().
+                                prev().
+                                children('.show_id').
+                                find('a').attr('href');
+                                
+    document.location = question_url;
     return false;
   });
   

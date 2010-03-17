@@ -23,11 +23,17 @@ class UserAnswer < ActiveRecord::Base
                         :question_id,
                         :answer_id
                         
-  validates_uniqueness_of :user_id, :scope => [:question_id, :answer_id],
+  validates_uniqueness_of :user_id, :scope => :question_id,
                                     :message => 'has already answered this question'
   
-  before_create :set_correct                                  
+  validate :user_cannot_be_quiz_owner
+  validate :user_must_be_participating_in_quiz
+  validate :question_approved
+  
+  before_create :set_correct                             
   after_create :update_correct_or_incorrect_count
+  
+  named_scope :correct, :conditions => {:correct => true}
   
   private
   
@@ -39,6 +45,24 @@ class UserAnswer < ActiveRecord::Base
     if participation = user.find_participation(question.quiz)
       count_field = correct? ? :correct_count : :incorrect_count
       participation.increment!(count_field)
+    end
+  end
+      
+  def user_cannot_be_quiz_owner
+    if question and user and question.quiz.owner == user
+      errors.add_to_base('You cannot answer a question in your own quiz')
+    end
+  end
+  
+  def user_must_be_participating_in_quiz
+    if question and user and not user.participating?(question.quiz)
+      errors.add_to_base('You must be participating in this quiz to answer questions')
+    end
+  end
+  
+  def question_approved
+    if question and not question.approved?
+      errors.add_to_base('Question must be approved')
     end
   end
 end

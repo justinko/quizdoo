@@ -2,14 +2,18 @@
 #
 # Table name: quizzes
 #
-#  id              :integer         not null, primary key
-#  category_id     :integer
-#  user_id         :integer
-#  title           :string(255)
-#  description     :text
-#  questions_count :integer         default(0)
-#  created_at      :datetime
-#  updated_at      :datetime
+#  id                   :integer         not null, primary key
+#  category_id          :integer
+#  user_id              :integer
+#  title                :string(255)
+#  description          :text
+#  questions_count      :integer         default(0)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  permalink            :string(255)
+#  participations_count :integer         default(0)
+#  questions_updated_at :datetime
+#  last_viewed          :datetime
 #
 
 class Quiz < ActiveRecord::Base
@@ -20,19 +24,64 @@ class Quiz < ActiveRecord::Base
   
   belongs_to :category, :counter_cache => true
   belongs_to :user
+  belongs_to :owner, :class_name => 'User',
+                     :foreign_key => 'user_id'
   
-  has_many :questions, :order => 'questions.position ASC',
+  has_many :questions, :order => 'questions.number ASC',
                        :dependent => :destroy
+                       
+  has_many :suggesters, :through => :questions
+                                              
+  has_many :user_answers, :through => :questions
   
   has_many :participations, :dependent => :destroy
                        
   has_many :participants, :through => :participations,
-                          :source => :user
+                          :source => :user,
+                          :order => 'LOWER(name) ASC'
                          
-  validates_presence_of :title, :user_id
+  validates_presence_of :title,
+                        :user_id,
+                        :permalink
   
   validates_uniqueness_of :title, :case_sensitive => false
   
+  before_validation :make_permalink
+  
   named_scope :recently_added, :limit => 10,
                                :order => 'created_at DESC'
+  
+  named_scope :recently_updated, :limit => 10,
+                                 :order => 'questions_updated_at DESC'
+                                 
+  named_scope :recently_viewed, :limit => 15,
+                                :order => 'last_viewed DESC'
+  
+  def percentage_answered_correctly
+    user_answers.correct.count / questions.approved.count * 100
+  end
+  
+  def tags
+    Tag.all :select => 'DISTINCT ON (tags.id) tags.id, tags.name',
+            :conditions => { :taggings => { :taggable_id => question_ids,
+                                            :taggable_type => 'Question' }},
+            :joins => :taggings,
+            :order => 'tags.id, LOWER(tags.name) ASC'
+  end
+    
+  def next_number
+    questions.maximum(:number).try(:next) || 1
+  end
+  
+  def to_param
+    "#{id}-#{permalink}"
+  end
+  
+  private
+  
+  def make_permalink
+    if attribute_present?(:title)
+      self.permalink = title.parameterize
+    end
+  end
 end

@@ -25,6 +25,9 @@ label {
   font-weight: bold;
   margin-bottom: 1px; }
 
+table {
+  border-collapse: collapse; }
+
 .right {
   float: right; }
 
@@ -32,6 +35,12 @@ label {
   color: #cc0000; }
 
 .hint {
+  color: #888; }
+
+.inline {
+  display: inline; }
+
+.light {
   color: #888; }
 
 a#logo img {
@@ -58,7 +67,9 @@ body#users.update #nav a.account,
 body#users #nav a.signup,
 body#user_sessions #nav a.login,
 body#quizzes #nav a.quizzes,
+body#questions #nav a.quizzes,
 body#categories #nav a.quizzes,
+body#tags #nav a.quizzes,
 body#dashboards #nav a.dashboard {
   font-weight: bold; }
 
@@ -92,8 +103,6 @@ hr#split {
     #content #left #mid_nav {
       float: right;
       font-size: 14px; }
-      #content #left #mid_nav.top {
-        margin-top: 20px; }
       #content #left #mid_nav.correct,
       #content #left #mid_nav.incorrect {
         color: #fff;
@@ -110,14 +119,28 @@ hr#split {
     #content #right h3 {
       margin-top: 0;
       margin-left: 40px; }
+      #content #right h3.top {
+        margin-top: 20px; }
     #content #right ul {
       margin-left: 40px; }
-    #content #right .no_items {
+    #content #right .no_items, #content #right .box {
       float: right;
       margin-left: 40px;
-      width: 300px;
+      width: 300px; }
+    #content #right .no_items {
       font-size: 12px;
       padding: 20px 0; }
+    #content #right .info {
+      padding: 10px;
+      margin-top: 20px; }
+      #content #right .info .button {
+        margin-top: 15px; }
+      #content #right .info.yellow {
+        background: #ffd;
+        border-right: 1px solid #efe9ba;
+        border-bottom: 1px solid #efe9ba; }
+    #content #right .show_table {
+      margin-left: 40px; }
 
 #footer {
   width: 960px;
@@ -143,7 +166,11 @@ hr#split {
     float: right;
     padding: 5px 8px;
     background: #5bc236;
-    color: #fff; }
+    color: #fff;
+    text-shadow: 1px 1px 0 #238400; }
+    .heading a.add:hover {
+      text-decoration: none;
+      color: #ddffd1; }
 
 .form {
   background: #f5f5f5;
@@ -152,7 +179,7 @@ hr#split {
   .form form {
     margin: 15px; }
     .form form textarea,
-    .form form input.big {
+    .form form input.text {
       width: 530px; }
     .form form input.big {
       font-size: 14px;
@@ -162,11 +189,10 @@ hr#split {
       margin-right: 50px; }
     .form form .submit {
       margin-bottom: 15px; }
-
-.field {
-  margin-bottom: 15px; }
-  .field .hint {
-    margin-top: 2px; }
+    .form form .field {
+      margin-bottom: 15px; }
+      .form form .field .hint {
+        margin-top: 2px; }
 
 .new_ajax_form {
   background: #f5f5f5;
@@ -199,18 +225,114 @@ hr#split {
 .errors {
   color: #cc0000; }
 
+.button a {
+  background: #00609d;
+  color: white;
+  padding: 4px 7px;
+  text-shadow: 1px 1px 0 #002841; }
+  .button a:hover {
+    color: #ccebff;
+    text-decoration: none; }
+
 .checkbox input {
   margin-left: 0; }
 .checkbox label {
   display: inline;
   font-weight: normal; }
 
-ul#questions_list {
+#quizzes_box {
+  background: #00609d;
   float: left;
-  padding-left: 20px; }
-  ul#questions_list li {
-    list-style-type: none;
-    font-size: 14px; }
+  width: 100%; }
+  #quizzes_box .box {
+    width: 310px;
+    float: left; }
+    #quizzes_box .box.end ul, #quizzes_box .box.end h3 {
+      margin-left: 9px; }
+    #quizzes_box .box h3 {
+      margin-left: 15px;
+      color: white;
+      text-shadow: 1px 1px 0 #002841; }
+    #quizzes_box .box ul {
+      margin: 0 0 15px 15px;
+      width: 285px;
+      padding: 0;
+      border-top: 1px solid #0080d2;
+      background: #0071b9; }
+      #quizzes_box .box ul li {
+        list-style-type: none;
+        margin: 0;
+        padding: 3px 0;
+        border-bottom: 1px solid #0080d2; }
+        #quizzes_box .box ul li a {
+          color: #cfecff;
+          margin: 0 8px; }
+          #quizzes_box .box ul li a:hover {
+            text-decoration: none;
+            color: white; }
+
+#categories_box {
+  float: left;
+  width: 100%;
+  background: #222;
+  margin-top: 20px; }
+  #categories_box h3 {
+    color: white;
+    margin-left: 15px; }
+  #categories_box .list {
+    background: #333;
+    float: left;
+    width: 590px;
+    margin: 0 15px 15px; }
+    #categories_box .list ul {
+      float: left;
+      margin: 10px 20px 12px 15px;
+      padding: 0; }
+      #categories_box .list ul li {
+        list-style-type: none;
+        margin: 0;
+        padding: 2px 0;
+        color: #666; }
+        #categories_box .list ul li a {
+          color: #bbb; }
+          #categories_box .list ul li a:hover {
+            color: white;
+            text-decoration: none; }
+
+#questions_list {
+  float: left;
+  width: 100%;
+  margin-top: 15px; }
+  #questions_list table {
+    width: 100%;
+    padding: 0;
+    margin: 0; }
+    #questions_list table tbody td {
+      vertical-align: top;
+      padding: 0;
+      border-top: 1px solid #eee; }
+      #questions_list table tbody td.id {
+        width: 80px; }
+        #questions_list table tbody td.id .show_id {
+          margin: 10px 0 15px 8px; }
+          #questions_list table tbody td.id .show_id a {
+            font-size: 16px;
+            color: #222; }
+            #questions_list table tbody td.id .show_id a:hover {
+              text-decoration: none;
+              color: #aaa; }
+      #questions_list table tbody td.body .box {
+        float: left;
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 0;
+        background: #f5f5f5; }
+        #questions_list table tbody td.body .box.over {
+          background: #ffd;
+          cursor: pointer; }
+        #questions_list table tbody td.body .box .show_body {
+          margin: 0 12px 12px;
+          float: left; }
 
 ul#answers_list {
   clear: both;
@@ -248,9 +370,21 @@ ul#answers_list {
       float: left;
       padding-right: 12px; }
 
-.quiz_link {
-  color: #888;
-  margin-bottom: 5px; }
+.users_list {
+  margin-left: 40px; }
+  .users_list table {
+    width: 100%;
+    border-top: 1px solid #eee; }
+    .users_list table tr td {
+      padding: 5px 0;
+      border-bottom: 1px solid #eee; }
+      .users_list table tr td span {
+        color: #888; }
+
+.meta {
+  color: #888; }
+  .meta.bottom {
+    margin-bottom: 7px; }
 
 .no_items {
   background: #f5f5f5;
@@ -303,6 +437,27 @@ ul#answers_list {
   color: #666; }
   .try_again a {
     font-weight: bold; }
+
+.show_table table {
+  width: 100%;
+  border: 1px solid #eee; }
+  .show_table table th, .show_table table td {
+    padding: 5px 8px;
+    text-align: left; }
+    .show_table table th.center, .show_table table td.center {
+      text-align: center; }
+  .show_table table thead tr th {
+    color: #888;
+    border-bottom: 1px solid #eee; }
+  .show_table table tbody tr.even td {
+    background: #f5f5f5; }
+
+a.close_account {
+  float: left;
+  display: block;
+  margin-top: 20px;
+  background: #ffeeee;
+  padding: 6px 12px; }
 
 #content #left .errorExplanation {
   border-style: solid;

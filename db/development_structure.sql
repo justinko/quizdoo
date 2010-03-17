@@ -122,7 +122,10 @@ CREATE TABLE questions (
     answers_count integer DEFAULT 0,
     "position" integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    number integer,
+    suggester_id integer,
+    approved boolean DEFAULT false
 );
 
 
@@ -156,7 +159,11 @@ CREATE TABLE quizzes (
     description text,
     questions_count integer DEFAULT 0,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    permalink character varying(255),
+    participations_count integer DEFAULT 0,
+    questions_updated_at timestamp without time zone,
+    last_viewed timestamp without time zone
 );
 
 
@@ -188,6 +195,68 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: taggings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taggings (
+    id integer NOT NULL,
+    tag_id integer,
+    taggable_id integer,
+    tagger_id integer,
+    tagger_type character varying(255),
+    taggable_type character varying(255),
+    context character varying(255),
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE taggings_id_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE taggings_id_seq OWNED BY taggings.id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tags (
+    id integer NOT NULL,
+    name character varying(255)
+);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE tags_id_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
+
+
+--
 -- Name: user_answers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -207,7 +276,6 @@ CREATE TABLE user_answers (
 --
 
 CREATE SEQUENCE user_answers_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -304,6 +372,20 @@ ALTER TABLE quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regcla
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE taggings ALTER COLUMN id SET DEFAULT nextval('taggings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE user_answers ALTER COLUMN id SET DEFAULT nextval('user_answers_id_seq'::regclass);
 
 
@@ -355,6 +437,22 @@ ALTER TABLE ONLY quizzes
 
 
 --
+-- Name: taggings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY taggings
+    ADD CONSTRAINT taggings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -392,10 +490,24 @@ CREATE INDEX index_participations_on_user_id_and_quiz_id ON participations USING
 
 
 --
+-- Name: index_questions_on_approved; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_questions_on_approved ON questions USING btree (approved);
+
+
+--
 -- Name: index_questions_on_quiz_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_questions_on_quiz_id ON questions USING btree (quiz_id);
+
+
+--
+-- Name: index_questions_on_suggester_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_questions_on_suggester_id ON questions USING btree (suggester_id);
 
 
 --
@@ -406,10 +518,45 @@ CREATE INDEX index_quizzes_on_category_id ON quizzes USING btree (category_id);
 
 
 --
+-- Name: index_quizzes_on_last_viewed; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_quizzes_on_last_viewed ON quizzes USING btree (last_viewed);
+
+
+--
+-- Name: index_quizzes_on_permalink; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_quizzes_on_permalink ON quizzes USING btree (permalink);
+
+
+--
+-- Name: index_quizzes_on_questions_updated_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_quizzes_on_questions_updated_at ON quizzes USING btree (questions_updated_at);
+
+
+--
 -- Name: index_quizzes_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_quizzes_on_user_id ON quizzes USING btree (user_id);
+
+
+--
+-- Name: index_taggings_on_tag_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_taggings_on_tag_id ON taggings USING btree (tag_id);
+
+
+--
+-- Name: index_taggings_on_taggable_id_and_taggable_type_and_context; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_taggings_on_taggable_id_and_taggable_type_and_context ON taggings USING btree (taggable_id, taggable_type, context);
 
 
 --
@@ -475,3 +622,11 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 INSERT INTO schema_migrations (version) VALUES ('20100228051430');
 
 INSERT INTO schema_migrations (version) VALUES ('20100310074829');
+
+INSERT INTO schema_migrations (version) VALUES ('20100314093211');
+
+INSERT INTO schema_migrations (version) VALUES ('20100314112241');
+
+INSERT INTO schema_migrations (version) VALUES ('20100316184437');
+
+INSERT INTO schema_migrations (version) VALUES ('20100317044924');

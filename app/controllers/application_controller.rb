@@ -20,7 +20,9 @@ class ApplicationController < ActionController::Base
   
   helper_method :current_user_session,
                 :current_user,
-                :owner?
+                :owner?,
+                :suggester?,
+                :participant?
   
   before_filter :ensure_domain
 
@@ -65,7 +67,17 @@ class ApplicationController < ActionController::Base
   
   def owner?
     return false unless current_user
-    @quiz.user == current_user
+    @quiz.owner == current_user
+  end
+  
+  def suggester?
+    return false unless current_user
+    @question.try(:suggester) == current_user
+  end
+  
+  def participant?
+    return false unless current_user
+    not owner? and not suggester?
   end
   
   def find_quiz
@@ -73,18 +85,26 @@ class ApplicationController < ActionController::Base
   end
   
   def find_question
-    @question = @quiz.questions.find(params[:question_id] || params[:id])
+    question_id = params[:question_id] || params[:id]
+    question_scope = @quiz.try(:questions) || Question
+    @question = question_scope.find(question_id)
   end
   
   def authorize_quiz
-    access_denied! unless current_user.can_edit_quiz?(@quiz)
+    if params[:question] and user_id = params[:question][:suggester_id]
+      unless User.find(user_id).participating?(@quiz)
+        access_denied!('You must participate in the quiz to suggest questions')
+      end
+    else
+      access_denied! unless current_user.can_edit_quiz?(@quiz)
+    end
   end
   
   def authorize_question
     access_denied! unless current_user.can_edit_question?(@question)
   end
   
-  def access_denied!(message = 'You do not have access to this page')
+  def access_denied!(message = 'Access denied')
     raise AccessDenied, message
   end
   

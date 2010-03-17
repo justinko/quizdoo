@@ -1,0 +1,31 @@
+ActsAsTruncatable
+=================
+
+First one your should to do - install plugin into your rails application. It's very simple, just run:
+
+	ruby script/plugin install git://github.com/dsalahutdinov/acts_as_truncatable.git
+
+from root of your rails app.
+
+Now you have method truncate_html available in your views templates:
+
+for example, you can use:
+
+	<%= truncate_html(post.body, 200, "") %>
+
+to truncate your's post body
+
+
+Method truncate_html excpects your to pass 3 parameters:
+	1) html to trancate
+	2) length to trancate
+	3) extension - string to cancat with result, for example, it can be link to post - link_to "Read post", post_path(post)
+
+Example
+=======
+<%= truncate_html(post.body, 200, "...") %>
+
+Example goes here.
+
+
+Copyright (c) 2010 Salahutdinov Dmitry, released under the MIT license

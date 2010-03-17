@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_filter :require_no_user, :only => [:new, :create]
-  before_filter :require_user, :only => [:edit, :update]
+  before_filter :require_user, :only => [:edit, :update, :destroy]
   before_filter :find_user, :only => :show
   
   def show
@@ -32,6 +32,11 @@ class UsersController < ApplicationController
     else
       render :edit
     end
+  end
+  
+  def destroy
+    @current_user.destroy
+    redirect_to root_url
   end
   
   private

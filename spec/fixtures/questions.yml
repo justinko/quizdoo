@@ -9,8 +9,18 @@
 #  position      :integer
 #  created_at    :datetime
 #  updated_at    :datetime
+#  number        :integer
+#  suggester_id  :integer
+#  approved      :boolean
 #
 
-one:
+rails:
   quiz: rails
   body: This is the body.
+  number: 12345
+  approved: true
+ruby:
+  quiz: ruby
+  body: This is the body.
+  number: 54321
+  approved: true

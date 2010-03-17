@@ -9,6 +9,6 @@
       .submit
         = submit_tag 'Update Answer', :loading_value => 'Updating Answer'
         %span or
-        = link_to 'Cancel', answer_path(@answer), :class => 'get cancel', :ajaxtarget => ajax_dom_id(@answer)
+        = link_to 'Cancel', answer_path(@answer), :class => 'ajax get cancel', :ajaxtarget => ajax_dom_id(@answer)
   
-  .delete_link= link_to 'Delete', answer_path(@answer), :class => 'delete right delete', :ajaxtarget => ajax_dom_id(@answer), :ajaxconfirm => 'Are you sure?'
+  .delete_link= link_to 'Delete', answer_path(@answer), :class => 'ajax delete right delete', :ajaxtarget => ajax_dom_id(@answer), :ajaxconfirm => 'Are you sure?'

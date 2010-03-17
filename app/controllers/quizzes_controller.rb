@@ -2,10 +2,11 @@ class QuizzesController < ApplicationController
   before_filter :require_user, :except => [:index, :show]
   before_filter :find_quiz, :except => [:index, :new, :create]
   before_filter :authorize_quiz, :only => [:edit, :update]
+  before_filter :find_participation, :only => :show
+  after_filter :touch_quiz, :only => :show
   
   def index
-    @recently_added = Quiz.recently_added
-    @categories = Category.all(:order => 'name ASC')
+    @quizzes = Quiz.all
   end
   
   def new
@@ -14,7 +15,7 @@ class QuizzesController < ApplicationController
   
   def create
     @quiz = Quiz.new(params[:quiz])
-    @quiz.user = current_user
+    @quiz.owner = current_user
     
     if @quiz.save
       redirect_to @quiz
@@ -35,23 +36,29 @@ class QuizzesController < ApplicationController
   end
   
   def show
+    @participating_users = @quiz.participants
+    @questions = @quiz.questions
+    @tags = @quiz.tags
   end
   
   def participate
     current_user.participate!(@quiz)
     flash[:success] = 'You are now participating in this quiz'
   rescue ActiveRecord::RecordInvalid => errors
-    flash[:failure] = errors
+    flash[:failure] = errors.to_s
   ensure
     redirect_to @quiz
   end
   
-  def unparticipate
-    current_user.unparticipate!(@quiz)
-    flash[:success] = 'You are no longer participating in this quiz'
-  rescue ActiveRecord::RecordNotFound
-    flash[:failure] = 'You are not a participate of this quiz'
-  ensure
-    redirect_to @quiz
+  private
+  
+  def find_participation
+    if current_user and not owner?
+      @participation = current_user.find_participation(@quiz)
+    end
+  end
+  
+  def touch_quiz
+    @quiz.touch(:last_viewed) unless owner?
   end
 end

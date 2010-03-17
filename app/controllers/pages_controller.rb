@@ -1,7 +1,6 @@
-class HighVoltage::PagesController < ApplicationController
-  unloadable
+class PagesController < ApplicationController
   before_filter :ensure_valid
-
+  
   def show
     render :template => current_page
   end

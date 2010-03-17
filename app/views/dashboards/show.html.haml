@@ -2,27 +2,73 @@
 
 %h2= @page_title
 
+- if @questions_awaiting_approval.any?
+
+  %h3 Questions Awaiting Approval
+  
+  .show_table
+    %table
+      %thead
+        %tr
+          %th Number
+          %th Quiz
+          %th User
+          %th Created
+      %tbody
+        - @questions_awaiting_approval.each do |question|
+          %tr{:class => cycle('even', ['even', 'odd'])}
+            %td= show_number(question)
+            %td= link_to h(question.quiz.title), quiz_path(question.quiz)
+            %td= user_link(question.suggester)
+            %td= time_ago_in_words(question.created_at) + ' ago'
+            
+
 %h3 Quizzes you are participating in
 
 - if @participating_quizzes.any?
-  %table
-    - @participating_quizzes.each do |quiz|
-      %tr
-        %td= link_to h(quiz.title), quiz_path(quiz)
+  .show_table
+    %table
+      %thead
+        %tr
+          %th Title
+          %th.center Correct/Incorrect
+          %th.center Answered/Questions
+          %th.center Participants
+      %tbody
+        - @participating_quizzes.each do |quiz|
+          %tr{:class => cycle('even', 'odd')}
+            %td= link_to h(quiz.title), quiz_path(quiz)
+            %td.center= quiz.correct_count.to_s + '/' + quiz.incorrect_count.to_s
+            %td.center= quiz.user_answer_count.to_s + '/' + quiz.questions_count.to_s
+            %td.center= quiz.participations_count || 0
 - else
   = no_items do
     You are not participating in any quizzes.
     = link_to 'View all quizzes', quizzes_path
 
-- content_for :right do
-  %h3 Your Quizzes
+
+
+%h3 Your Quizzes
+
+- if @your_quizzes.any?
+  .show_table
+    %table
+      %thead
+        %tr
+          %th Title
+          %th.center % Correct 
+          %th.center Questions
+          %th.center Participants
+      %tbody
+        - @your_quizzes.each do |quiz|
+          %tr{:class => cycle('even', ['even', 'odd'])}
+            %td= link_to h(quiz.title), quiz_path(quiz)
+            %td.center= quiz.percentage_answered_correctly.to_s + '%'
+            %td.center= quiz.questions_count || 0
+            %td.center= quiz.participations_count || 0
+- else
+  = no_items do
+    You have not created any quizzes.
+    %br
+    = link_to 'Create one now', new_quiz_path
   
-  - if @your_quizzes.any?
-    %ul
-      - @your_quizzes.each do |quiz|
-        %li= link_to quiz.title, quiz_path(quiz)
-  - else
-    = no_items do
-      You have not created any quizzes.
-      %br
-      = link_to 'Create one now', new_quiz_path

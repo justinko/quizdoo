@@ -16,6 +16,8 @@ class Category < ActiveRecord::Base
   
   validates_uniqueness_of :name, :case_sensitive => false
   
+  default_scope :order => 'name ASC'
+  
   def self.for_select
     all(:order => 'name ASC')
   end

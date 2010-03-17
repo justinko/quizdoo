@@ -29,9 +29,17 @@ class User < ActiveRecord::Base
     config.perishable_token_valid_for = 1.hour
   end
     
-  has_many :quizzes, :dependent => :destroy
+  has_many :quizzes, :order => 'LOWER(title) ASC',
+                     :dependent => :destroy
   
   has_many :questions, :through => :quizzes
+  
+  has_many :suggested_questions, :class_name => 'Question',
+                                 :foreign_key => 'suggester_id',
+                                 :dependent => :nullify
+                                 
+  has_many :suggested_answers, :through => :suggested_questions,
+                               :source => :answers
     
   has_many :participations, :dependent => :destroy
   
@@ -57,16 +65,36 @@ class User < ActiveRecord::Base
     find_by_username(login) || find_by_email(login)
   end
   
+  def participating_quizzes_for_dashboard
+    quizzes_columns = 'quizzes.permalink, quizzes.id, quizzes.title, ' +
+                      'quizzes.questions_count, quizzes.participations_count'
+    
+    select_sql = quizzes_columns + ', ' +
+                 'participations.correct_count AS correct_count, ' +
+                 'participations.incorrect_count AS incorrect_count, ' +
+                 'COUNT(user_answers.question_id) AS user_answer_count'
+    
+    joins_sql = 'LEFT OUTER JOIN questions ON (quizzes.id = questions.quiz_id) ' +
+                'LEFT OUTER JOIN user_answers ON (user_answers.question_id = questions.id)'
+                
+    group_sql = quizzes_columns + ', ' + 
+                'participations.correct_count, participations.incorrect_count'
+    
+    participating_quizzes.all :select => select_sql,
+                              :joins => joins_sql,
+                              :group => group_sql,
+                              :order => 'LOWER(quizzes.title) ASC'
+  end
+  
+  def suggested_questions_for_quiz(quiz)
+    suggested_questions.all :conditions => { :quiz_id => quiz },
+                            :include => :tags
+  end
+  
   def participate!(quiz)
     participation = participations.build
     participation.quiz = quiz
     participation.save!
-  end
-  
-  def unparticipate!(quiz)
-    find_participation(quiz).destroy
-    UserAnswer.destroy_all :user_id => id,
-                           :question_id => quiz.question_ids
   end
   
   def participating?(quiz)
@@ -76,7 +104,11 @@ class User < ActiveRecord::Base
   def answer_question!(question, params)
     answer_id = params[:user_answer][:answer_id]
     answer = question.answers.find(answer_id)
-    answers.find_or_create_by_question_id_and_answer_id(question.id, answer.id)
+    
+    user_answer = answers.build
+    user_answer.question = question
+    user_answer.answer = answer
+    user_answer.save!
   end
   
   def all_answered?(quiz)
@@ -88,15 +120,16 @@ class User < ActiveRecord::Base
   end
   
   def can_edit_answer?(answer)
-    question_ids.include?(answer.question_id)
+    question_ids.include?(answer.question_id) ||
+    suggested_answers.include?(answer)
   end
   
   def can_edit_question?(question)
-    questions.include?(question)
+    question.suggester == self || questions.include?(question)
   end
   
   def can_edit_quiz?(quiz)
-    quiz.user_id == id
+    quiz.user_id == id || quiz.suggesters.include?(self)
   end
   
   def deliver_password_reset_instructions!

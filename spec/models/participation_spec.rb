@@ -27,5 +27,33 @@ describe Participation do
                               :quiz_id
                               
   should_validate_uniqueness_of :quiz_id, :scope => :user_id,
-                                          :message => 'is already on your participation list'
+                                          :message => 'is already part of your participation list'
+  
+  describe 'custom validations' do
+    fixtures :users, :quizzes
+    
+    describe 'record' do
+      it 'should not be valid if user is quiz owner' do
+        make_record
+        error_str = 'You cannot participate in your own quiz'
+        @record.errors.full_messages.should include(error_str)
+      end
+      
+      def make_record
+        @record = Participation.new
+        @record.user = users(:justin)
+        @record.quiz = quizzes(:ruby)
+        @record.save
+        @record
+      end
+    end
+  end
+                                        
+  describe '#after_destroy' do
+    it 'should destroy user answers' do
+      lambda {
+        participations(:rails).destroy
+      }.should change(UserAnswer, :count).by(-1)
+    end
+  end
 end

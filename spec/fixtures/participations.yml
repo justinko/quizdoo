@@ -11,7 +11,7 @@
 #  updated_at      :datetime
 #
 
-one:
+rails:
   user: justin
   quiz: rails
   correct_count: 1

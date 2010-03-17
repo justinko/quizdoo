@@ -1,6 +1,7 @@
 !gray_bg = #f5f5f5
 !green = #5BC236
 !red = #c00
+!dark_blue = #00609d
 
 body
   :margin 0
@@ -29,6 +30,9 @@ label
   :font-weight bold
   :margin-bottom 1px
 
+table
+  :border-collapse collapse
+
 .right
   :float right
 
@@ -36,6 +40,12 @@ label
   :color = !red
   
 .hint
+  :color #888
+
+.inline
+  :display inline
+  
+.light
   :color #888
 
 a#logo
@@ -65,7 +75,9 @@ body#users.update #nav a.account,
 body#users #nav a.signup,
 body#user_sessions #nav a.login,
 body#quizzes #nav a.quizzes,
+body#questions #nav a.quizzes,
 body#categories #nav a.quizzes,
+body#tags #nav a.quizzes,
 body#dashboards #nav a.dashboard
   :font-weight bold
           
@@ -100,8 +112,6 @@ hr#split
     #mid_nav
       :float right
       :font-size 14px
-      &.top
-        :margin-top 20px
       &.correct,
       &.incorrect
         :color #fff
@@ -119,14 +129,29 @@ hr#split
     h3
       :margin-top 0
       :margin-left 40px
+      &.top
+        :margin-top 20px
     ul
       :margin-left 40px
-    .no_items
+    .no_items, .box
       :float right
       :margin-left 40px
       :width 300px
+    .no_items
       :font-size 12px
       :padding 20px 0
+    .info
+      :padding 10px
+      :margin-top 20px
+      .button
+        :margin-top 15px
+      &.yellow
+        :background #ffd
+        :border-right 1px solid #efe9ba
+        :border-bottom 1px solid #efe9ba
+    .show_table
+      :margin-left 40px
+      
 
 #footer
   :width 960px
@@ -153,6 +178,10 @@ hr#split
     :padding 5px 8px
     :background = !green
     :color #fff
+    :text-shadow 1px 1px 0 #238400
+    &:hover
+      :text-decoration none
+      :color #ddffd1
 
 .form
   :background = !gray_bg
@@ -161,7 +190,7 @@ hr#split
   form
     :margin 15px
     textarea,
-    input.big
+    input.text
       :width 530px
     input.big
       :font-size 14px
@@ -171,12 +200,11 @@ hr#split
       :margin-right 50px
     .submit
       :margin-bottom 15px
+    .field
+      :margin-bottom 15px
+      .hint
+        :margin-top 2px
 
-.field
-  :margin-bottom 15px
-  .hint
-    :margin-top 2px
- 
 .new_ajax_form  
   :background = !gray_bg
   :float left
@@ -208,6 +236,16 @@ hr#split
 
 .errors
   :color = !red
+  
+.button
+  a
+    :background = !dark_blue
+    :color white
+    :padding 4px 7px
+    :text-shadow 1px 1px 0 #002841
+    &:hover
+      :color #ccebff
+      :text-decoration none
 
 .checkbox
   input
@@ -216,12 +254,102 @@ hr#split
     :display inline
     :font-weight normal
 
-ul#questions_list
+#quizzes_box
+  :background = !dark_blue
   :float left
-  :padding-left 20px
-  li
-    :list-style-type none
-    :font-size 14px
+  :width 100%
+  .box
+    :width 310px
+    :float left
+    &.end
+      ul, h3
+        :margin-left 9px
+    h3
+      :margin-left 15px
+      :color white
+      :text-shadow 1px 1px 0 #002841
+    ul
+      :margin 0 0 15px 15px
+      :width 285px
+      :padding 0
+      :border-top 1px solid #0080d2
+      :background #0071b9
+      li
+        :list-style-type none
+        :margin 0
+        :padding 3px 0
+        :border-bottom 1px solid #0080d2
+        a
+          :color #cfecff
+          :margin 0 8px
+          &:hover
+            :text-decoration none
+            :color white
+
+#categories_box
+  :float left
+  :width 100%
+  :background #222
+  :margin-top 20px
+  h3
+    :color white
+    :margin-left 15px
+  .list
+    :background #333
+    :float left
+    :width 590px
+    :margin 0 15px 15px
+    ul
+      :float left
+      :margin 10px 20px 12px 15px
+      :padding 0
+      li
+        :list-style-type none
+        :margin 0
+        :padding 2px 0
+        :color #666
+        a
+          :color #bbb
+          &:hover
+            :color white
+            :text-decoration none
+
+#questions_list
+  :float left
+  :width 100%
+  :margin-top 15px
+  table
+    :width 100%
+    :padding 0
+    :margin 0
+    tbody
+      td
+        :vertical-align top
+        :padding 0
+        :border-top 1px solid #eee
+        &.id
+          :width 80px
+          .show_id
+            :margin 10px 0 15px 8px
+            a
+              :font-size 16px
+              :color #222
+              &:hover
+                :text-decoration none
+                :color #aaa
+        &.body
+          .box
+            :float left
+            :width 100%
+            :margin-bottom 15px
+            :padding 0
+            :background = !gray_bg
+            &.over
+              :background #ffd
+              :cursor pointer
+            .show_body
+              :margin 0 12px 12px
+              :float left
  
 ul#answers_list
   :clear both
@@ -260,10 +388,23 @@ ul#answers_list
       .radio_button
         :float left
         :padding-right 12px
-    
-.quiz_link
+
+.users_list
+  :margin-left 40px
+  table
+    :width 100%
+    :border-top 1px solid #eee
+    tr
+      td
+        :padding 5px 0
+        :border-bottom 1px solid #eee
+        span
+          :color #888
+
+.meta
   :color #888
-  :margin-bottom 5px
+  &.bottom
+    :margin-bottom 7px
 
 .no_items
   :background = !gray_bg
@@ -314,6 +455,33 @@ ul#answers_list
   :color #666
   a
     :font-weight bold
+
+.show_table
+  table
+    :width 100%
+    :border 1px solid #eee
+    th, td
+      :padding 5px 8px
+      :text-align left
+      &.center
+        :text-align center
+    thead
+      tr
+        th
+          :color #888
+          :border-bottom 1px solid #eee
+    tbody
+      tr
+        &.even
+          td
+            :background = !gray_bg
+
+a.close_account
+  :float left
+  :display block
+  :margin-top 20px
+  :background #ffeeee
+  :padding 6px 12px
 
 #content #left  
   .errorExplanation
