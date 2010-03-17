@@ -16,7 +16,7 @@
         %tr{:class => cycle('even', ['even', 'odd'])}
           %td= link_to truncate(h(quiz.title), :length => 50), quiz_path(quiz)
           %td.center= quiz.questions.count
-          %td= time_ago_in_words(quiz.last_viewed) + ' ago'
+          %td= time_ago_in_words(quiz.last_viewed) + ' ago' unless quiz.last_viewed.blank?
           
           
 = render :partial => 'categories/list'
