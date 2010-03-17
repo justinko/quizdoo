@@ -61,6 +61,8 @@ class Quiz < ActiveRecord::Base
   
   def percentage_answered_correctly
     user_answers.correct.count / questions.approved.count * 100
+  rescue ZeroDivisionError
+    0
   end
   
   def tags
