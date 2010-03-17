@@ -23,7 +23,6 @@ Rails::Initializer.run do |config|
   config.gem 'authlogic', :version => '2.1.3'
   config.gem 'delayed_job', :version => '1.8.4'
   config.gem 'haml', :version => '2.2.16'
-  config.gem 'image_science', :version => '1.2.1'
   config.gem 'acts_as_markup', :version => '1.3.3'
   config.gem 'will_paginate', :version => '2.3.11'
   config.gem 'recaptcha', :lib => 'recaptcha/rails', :version => '0.2.3'
