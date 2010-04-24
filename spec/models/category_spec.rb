@@ -11,9 +11,7 @@
 
 require 'spec_helper'
 
-describe Category do
-  fixtures :categories
-  
+describe Category do  
   should_have_many :quizzes
   
   should_validate_presence_of :name

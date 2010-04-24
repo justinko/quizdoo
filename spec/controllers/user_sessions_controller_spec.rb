@@ -11,9 +11,7 @@ describe UserSessionsController do
     }
   end
   
-  describe '#create' do
-    fixtures :users
-    
+  describe '#create' do    
     before { @user = users(:justin) }
     
     it 'should create a new session successfully' do
@@ -34,8 +32,6 @@ describe UserSessionsController do
 end
 
 describe UserSessionsController, 'User logged in' do
-  fixtures :users
-  
   before { login }
   
   it 'should destroy a session and redirect to login' do

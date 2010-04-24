@@ -44,8 +44,8 @@ class QuizzesController < ApplicationController
   def participate
     current_user.participate!(@quiz)
     flash[:success] = 'You are now participating in this quiz'
-  rescue ActiveRecord::RecordInvalid => errors
-    flash[:failure] = errors.to_s
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:failure] = invalid.record.error_sentence
   ensure
     redirect_to @quiz
   end

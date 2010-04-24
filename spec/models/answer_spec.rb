@@ -13,9 +13,7 @@
 
 require 'spec_helper'
 
-describe Answer do
-  fixtures :answers
-  
+describe Answer do  
   should_not_allow_mass_assignment_of :question_id
   
   should_belong_to :question

@@ -18,9 +18,7 @@
 
 require 'spec_helper'
 
-describe Quiz do
-  fixtures :quizzes
-  
+describe Quiz do  
   should_not_allow_mass_assignment_of :user_id
   
   should_belong_to :category,
@@ -63,9 +61,7 @@ describe Quiz do
     it { quizzes(:rails).percentage_answered_correctly.should eql(100) }
   end
   
-  describe '#tags' do
-    fixtures :tags, :taggings
-    
+  describe '#tags' do    
     it { quizzes(:rails).tags.should include(tags(:rails)) }
     it { quizzes(:rails).tags.should_not include(tags(:ruby)) }
     

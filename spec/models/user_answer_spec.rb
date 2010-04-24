@@ -14,8 +14,6 @@
 require 'spec_helper'
 
 describe UserAnswer do
-  fixtures :user_answers
-  
   should_not_allow_mass_assignment_of :user_id,
                                       :question_id,
                                       :answer_id,
@@ -34,9 +32,7 @@ describe UserAnswer do
   
   should_have_scope :correct, :conditions => {:correct => true}
   
-  describe 'custom validations' do
-    fixtures :users, :questions, :answers
-    
+  describe 'custom validations' do    
     describe 'record' do
       it 'should be invalid if user is quiz owner' do
         make_record
@@ -73,9 +69,7 @@ describe UserAnswer do
     it { user_answers(:rails).should be_correct }
   end
   
-  describe 'updating participant correct counts' do
-    fixtures :users, :questions, :answers
-    
+  describe 'updating participant correct counts' do    
     before do
       UserAnswer.delete_all
       

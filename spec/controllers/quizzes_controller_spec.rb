@@ -110,7 +110,7 @@ describe QuizzesController do
         post :participate, :id => quizzes(:ruby).id
       }.should_not change(Participation, :count)
       
-      flash[:failure].should eql('Validation failed: You cannot participate in your own quiz')
+      flash[:failure].should eql('You cannot participate in your own quiz')
       response.should be_redirect
       response.should redirect_to(quiz_url(assigns[:quiz]))
     end
@@ -120,7 +120,7 @@ describe QuizzesController do
         post :participate, :id => quizzes(:rails).id
       }.should_not change(Participation, :count)
 
-      flash[:failure].should eql('Validation failed: Quiz is already part of your participation list')
+      flash[:failure].should eql('Quiz is already part of your participation list')
       response.should be_redirect
       response.should redirect_to(quiz_url(assigns[:quiz]))
     end

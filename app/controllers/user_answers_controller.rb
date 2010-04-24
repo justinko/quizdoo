@@ -5,8 +5,8 @@ class UserAnswersController < ApplicationController
   
   def create
     current_user.answer_question!(@question, params)
-  rescue ActiveRecord::RecordInvalid => errors
-    flash[:failure] = errors.to_s
+  rescue ActiveRecord::RecordInvalid => invalid
+    flash[:failure] = invalid.record.error_sentence
   rescue ActiveRecord::RecordNotFound
     flash[:failure] = 'Quiz, Question or Answer could not be found'
   ensure

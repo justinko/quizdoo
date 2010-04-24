@@ -18,7 +18,7 @@ dhh = User.create :name => 'David Hanson',
                   :password => 'test',
                   :password_confirmation => 'test'            
             
-['Programming', 'Science', 'Politics', 'Finance', 'People', 'Technology', 'World News', 'Geography', 'Mathematics', 'Lifestyle'].each do |name|
+['Ruby', 'Scala', 'Erlang'].each do |name|
   Category.create :name => name
 end
 

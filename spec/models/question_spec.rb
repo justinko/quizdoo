@@ -17,8 +17,6 @@
 require 'spec_helper'
 
 describe Question do
-  fixtures :questions
-  
   should_not_allow_mass_assignment_of :quiz_id
   
   should_belong_to :quiz,
@@ -39,9 +37,7 @@ describe Question do
   should_have_scope :approved, :conditions => { :approved => true }
   should_have_scope :awaiting_approval, :conditions => { :approved => false }
   
-  describe 'custom validations' do
-    fixtures :quizzes
-    
+  describe 'custom validations' do    
     it 'should set number if not set by user' do
       Question.delete_all
       
@@ -92,9 +88,7 @@ describe Question do
     it { questions(:rails).answers.first == questions(:rails).correct_answer }
   end
   
-  describe '#next and #prev' do
-    fixtures :quizzes
-    
+  describe '#next and #prev' do    
     before do
       3.times do |i|
         

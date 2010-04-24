@@ -25,8 +25,6 @@
 require 'spec_helper'
 
 describe User do
-  fixtures :users, :quizzes
-  
   should_have_many :quizzes,
                    :questions,
                    :suggested_questions,
@@ -116,9 +114,7 @@ describe User do
     it { @user.participating?(quizzes(:ruby)).should be_false }
   end
   
-  describe '#answer_question!' do
-    fixtures :questions, :answers
-    
+  describe '#answer_question!' do    
     before do
       UserAnswer.delete_all
       @user = @user
@@ -173,9 +169,7 @@ describe User do
     it { @user.total_answered(quizzes(:rails)).should eql(1) }
   end
   
-  describe '#can_edit_answer?' do
-    fixtures :answers
-        
+  describe '#can_edit_answer?' do        
     it "should be true if user owns the answer's quiz" do
       answer = answers(:ruby_correct)
       @user.can_edit_answer?(answer).should be_true
@@ -209,9 +203,7 @@ describe User do
     end
   end
   
-  describe '#can_edit_question?' do
-    fixtures :questions
-    
+  describe '#can_edit_question?' do    
     describe 'with suggester as nil' do
       before do
         mock.instance_of(Question).suggester { nil }
@@ -269,9 +261,7 @@ describe User do
     end
   end
   
-  describe '#find_participation' do
-    fixtures :participations
-    
+  describe '#find_participation' do    
     it 'should find the correct participation record' do
       participation = participations(:rails)
       quiz = quizzes(:rails)

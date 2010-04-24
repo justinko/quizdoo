@@ -25,7 +25,15 @@ Spec::Runner.configure do |config|
   config.use_instantiated_fixtures  = false
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
   
-  config.global_fixtures = :users
+  config.global_fixtures = :answers,
+                           :categories,
+                           :participations,
+                           :questions,
+                           :quizzes,
+                           :taggings,
+                           :tags,
+                           :user_answers,
+                           :users
   # == Fixtures
   #
   # You can declare fixtures for each example_group like this:

@@ -14,8 +14,6 @@
 require 'spec_helper'
 
 describe Participation do
-  fixtures :participations
-  
   should_not_allow_mass_assignment_of :user_id,
                                       :quiz_id,
                                       :correct_count,
@@ -29,9 +27,7 @@ describe Participation do
   should_validate_uniqueness_of :quiz_id, :scope => :user_id,
                                           :message => 'is already part of your participation list'
   
-  describe 'custom validations' do
-    fixtures :users, :quizzes
-    
+  describe 'custom validations' do    
     describe 'record' do
       it 'should not be valid if user is quiz owner' do
         make_record

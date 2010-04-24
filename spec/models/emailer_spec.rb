@@ -5,9 +5,7 @@ describe Emailer do
   include EmailSpec::Matchers
   include ActionController::UrlWriter
   
-  describe '#password_reset_instructions' do
-    fixtures :users
-    
+  describe '#password_reset_instructions' do    
     before do
       @user = users(:justin)
       @email = Emailer.create_password_reset_instructions(@user)

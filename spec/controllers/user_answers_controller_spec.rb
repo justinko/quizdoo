@@ -33,7 +33,7 @@ describe UserAnswersController do
                       :user_answer => {:answer_id => @answer.id}
       }.should_not change(UserAnswer, :count)
       
-      flash[:failure].should eql('Validation failed: User has already answered this question')
+      flash[:failure].should eql('User has already answered this question')
       response.should be_redirect
       response.should redirect_to(quiz_question_url(@quiz, @question))
     end
